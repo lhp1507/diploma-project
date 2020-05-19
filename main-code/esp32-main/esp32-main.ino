@@ -135,12 +135,21 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   static volatile uint16_t alarm_left; //Số báo thức còn lại
   
   static volatile byte mode_ALARM = mode_ON;
-  static volatile uint8_t REMINDS = 0; //NHẬN CHUỖI "Alarm" từ server - 1
+  /*
+   * REMINDS:
+   * 1 - "Alarm" nhận từ mqtt
+   * 2 - tìm hộp thuốc
+   */
+  static volatile uint8_t REMINDS = 0;
 
   unsigned long lastSend = 0;
   unsigned long lastRead = 0;
+  unsigned long lastRing = 0;
   unsigned long lastDisplay = 0;
+  unsigned long readInterval = 10000; //10s
+  unsigned long sendInterval = 10000; //10s
   unsigned long displayGap = 150;
+  unsigned long buzzerGap = 500;
 
   char bufferG[20];
   char bufferT[5];
@@ -249,20 +258,6 @@ bool saveSPIFFSConfigFile(void)
 }
 
 
-//=========================== ERROR =============================
-//void IRAM_ATTR Bonoff(void)
-//{
-/////////////// button ONOFF : mode_ALARM /////////////////
-//    lcd.clear();
-//    mode_ALARM = mode_OFF;
-//    REMINDS = 0;
-//    menu = 0;
-//    Serial.print("mode_ALARM (B_ONOFF pressed) ISR: ");
-//    Serial.println(mode_ALARM);
-//}
-//============================ HERE ==============================
-
-
 void setup()
 {
   Wire.begin();
@@ -275,7 +270,7 @@ void setup()
   lcd.init();
   lcd.backlight();
 
-  Serial.println(F("/////  DATN  /////"));
+  Serial.println(F("////  DATN  \\\\"));
   
   lcd.setCursor(0,0);
   lcd.print("DATN");
@@ -303,17 +298,8 @@ void setup()
   /*
    * Cài đặt MODE cho các pin:
    */
-  //a. mạch giải mã 74hc138:
   pinMode(BUZZER_PIN, OUTPUT);
-//  pinMode(INPUT_C, OUTPUT);
-//  pinMode(INPUT_B, OUTPUT);
-//  pinMode(INPUT_A, OUTPUT);
-    //đặt trạng thái A,B,C là HIGH để không sáng đèn nào
-    //không trùng thứ nào trong tuần
-    digitalWrite(BUZZER_PIN, LOW);
-//    digitalWrite(INPUT_C, HIGH);
-//    digitalWrite(INPUT_B, HIGH);
-//    digitalWrite(INPUT_A, HIGH);
+  digitalWrite(BUZZER_PIN, LOW);
   //b. nút nhấn:
   pinMode(B_SET, INPUT);
   pinMode(B_PLUS, INPUT);
@@ -684,6 +670,14 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(alarm_left);
       Serial.println();
     }
+    if(((char)payload[0] == 'f' || (char)payload[0] == 'F') && ((char)payload[0] == 'i' || (char)payload[0] == 'I') && ((char)payload[0] == 'n' || (char)payload[0] == 'N') && ((char)payload[0] == 'd' || (char)payload[0] == 'D'))
+    {
+      REMINDS = 2;
+      
+      Serial.print("payload in 'Find' - REMINDS: ");
+      Serial.println(REMINDS);
+      Serial.println();
+    }
   }
 }
 
@@ -713,6 +707,51 @@ void reconnect()
   }
 }
 
+void findBox()
+{
+  if(REMINDS == 2)
+  {
+    lcd.clear();
+    lcd.setCursor(3,0);
+    lcd.print("I'm here!"); //9 chars
+    lcd.setCursor(4,0);
+    lcd.print("I'm here!"); //9 chars
+
+    if(millis() - lastRing >= buzzerGap)
+    {
+      digitalWrite(BUZZER_PIN, HIGH);
+      lastRing = millis();
+    }
+    else
+    {
+      digitalWrite(BUZZER_PIN, LOW);
+    }
+    
+    ///////////// button ONOFF : mode_ALARM /////////////////
+    int readingOO = digitalRead(B_ONOFF);
+    if(readingOO != lastButtonStateOO)
+    {
+      lastDebounceTimeOO = millis();
+    }
+    if((millis() - lastDebounceTimeOO) > debounceDelayOO)
+    {
+      if(readingOO != buttonStateOO)
+      {
+        buttonStateOO = readingOO;
+        if(buttonStateOO == LOW)
+        {
+          lcd.clear();
+          digitalWrite(BUZZER_PIN, LOW);
+          REMINDS = 0;
+          menu = 0;
+          Serial.print("FIND (B_ONOFF pressed)");
+        }
+      }
+    }
+    lastButtonStateOO = readingOO;
+  }
+}
+
 void printAlarmLEFT()
 {
   lcd.setCursor(0,1);
@@ -725,8 +764,6 @@ void printAlarmLEFT()
     lcd.print("   ");
   }
 }
-
-
 
 //Bật-tắt báo thức
 void Alarm()
@@ -745,7 +782,16 @@ void Alarm()
 
         lastDisplay = millis();
       }
-      digitalWrite(BUZZER_PIN, HIGH);
+      
+      if(millis() - lastRing >= (buzzerGap - 350))
+      {
+        digitalWrite(BUZZER_PIN, HIGH);
+        lastRing = millis();
+      }
+      else
+      {
+        digitalWrite(BUZZER_PIN, LOW);
+      }
     }
     else
     {
@@ -785,7 +831,7 @@ void Alarm()
 void DisplayDHT()
 {
   static int temp, hum;
-  if(millis() - lastRead >= 10000)
+  if(millis() - lastRead >= readInterval)
   {
     
     temp = dht.readTemperature(); //đọc nhiệt độ (Ngưỡng t: 0 - 55 độ C, sai số +-2 độ C) 
@@ -800,7 +846,7 @@ void DisplayDHT()
     lastRead = millis();
   }
 
-  if(millis() - lastSend >= 10000)
+  if(millis() - lastSend >= sendInterval)
   {
     String T = "T" + String(temp);
     String H = "H" + String(hum);
