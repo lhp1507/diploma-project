@@ -444,9 +444,14 @@ void loop()
   {
     DisplayDHT();
     printAlarmLEFT();
+    
     if(REMINDS == 1)
     {
       menu = 4;
+    }
+    if(REMINDS == 2)
+    {
+      menu = 5;
     }
   }
   
@@ -616,6 +621,10 @@ void loop()
   if(menu == 4)
   {
     Alarm();
+  }
+  if(menu == 5)
+  {
+    findBox();
   }
   client.loop();
 }
