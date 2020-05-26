@@ -1,7 +1,15 @@
 /*
  * NOTE:
- * 
- * 
+ * Pin map:
+ *    Device  <----->  ESP32
+ *    DHT11   <----->   12
+ *    BUZZER  <----->   14
+ *    B_SET   <----->   36
+ *    B_PLUS  <----->   39
+ *    B_MINUS <----->   35
+ *    B_ONOFF <----->   34
+ *    SDA     <----->   21
+ *    SCL     <----->   22
  */
 #include <FS.h>
 #include <SPIFFS.h>
@@ -18,13 +26,12 @@
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 
-#include <Tone32.h>
 #include <DHT.h>
 /*
  * cấu hình dht11 
  */
 #define DHTTYPE   DHT11  //loại dht sử dụng
-#define DHTPIN    15       //chân nhận dữ liệu
+#define DHTPIN    12       //chân nhận dữ liệu
 DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
 
 #define BUZZER_PIN      14
@@ -33,9 +40,6 @@ DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
 #define B_PLUS    39    //nút CỘNG
 #define B_MINUS   35    //nút TRỪ
 #define B_ONOFF   34    //nút bật/tắt báo thức
-//#define INPUT_C   14    //74hc138 - C
-//#define INPUT_B   18    //74hc138 - B
-//#define INPUT_A   13    //74hc138 - A
 
 #define mode_ON   1
 #define mode_OFF  0
@@ -270,14 +274,20 @@ void setup()
   lcd.init();
   lcd.backlight();
 
-  Serial.println(F("////  DATN  \\\\"));
+  Serial.println(F("--------- DATN ---------"));
   
   lcd.setCursor(0,0);
-  lcd.print("DATN");
+  lcd.print("Phu Dau Quang"); //13
   lcd.setCursor(0,1);
-  lcd.print("Starting.....");
-  
-  delay(1000);
+  lcd.print("Starting.");
+  delay(500);
+  lcd.print(".");
+  delay(500);
+  lcd.print(".");
+  delay(500);
+  lcd.print(".");
+  delay(500);
+  lcd.print(".");
   
   lcd.clear();
   lcd.setCursor(0,0);
@@ -285,16 +295,14 @@ void setup()
   lcd.setCursor(0,1);
   lcd.print("Version: 1.0");
   
-  delay(1500);
+  delay(1000);
   
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Everything is");
   lcd.setCursor(0,1);
   lcd.print("almost done");
-
-  delay(500);
-  lcd.noBacklight();
+  
   /*
    * Cài đặt MODE cho các pin:
    */
@@ -375,7 +383,10 @@ void setup()
 
   //if you get here you have connected to the WiFi
   Serial.println(F("WiFi connected ... yeey"));
-
+  
+  lcd.setCursor(0,0);
+  lcd.print("WIFI connected"); //14
+  
   //read updated parameters
   strncpy(mqtt_server, custom_mqtt_server.getValue(), sizeof(mqtt_server));
   strncpy(mqtt_port, custom_mqtt_port.getValue(),     sizeof(mqtt_port));
@@ -396,18 +407,17 @@ void setup()
   connectmqtt();
   //
   menu = 0;
-
-  lcd.backlight();
   
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("Done!");
-  delay(1000);
-  lcd.clear();
-  lcd.setCursor(0,0);
 
   lcd.createChar(1, temperature);
   lcd.createChar(2, humidity);
+  
+  delay(1000);
+  lcd.clear();
+  lcd.setCursor(0,0);
 }
 
 
@@ -611,7 +621,7 @@ void loop()
     alarm_sec = (alarm_hour*60 + alarm_minute)*60;
     sec_to_mqtt = "G" + String(alarm_sec);
     
-    sec_to_mqtt.toCharArray(bufferG, (sec_to_mqtt.length())+1);
+    sec_to_mqtt.toCharArray(bufferG, (sec_to_mqtt.length() + 1));
     client.publish(mqtt_pub_topic, bufferG);
 
     delay(1000);
@@ -626,17 +636,23 @@ void loop()
   {
     findBox();
   }
+  
   client.loop();
 }
 
 void connectmqtt()
 {
-  client.connect("ESP32_ClientID");  // ESP will connect to mqtt broker with clientID
+  client.connect("ESP32_PILL_ClientID");  // ESP will connect to mqtt broker with clientID
   {
     Serial.print("connected to MQTT at ");
     Serial.println(mqtt_server);
+
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("MQTT connected"); //14
+    
     client.subscribe(mqtt_sub_reminds); //topic=Demo
-    client.publish(mqtt_pub_topic,  "connected to MQTT");
+    client.publish(mqtt_pub_topic, "PILL_connected to MQTT");
 
     if (!client.connected())
     {
@@ -679,7 +695,7 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(alarm_left);
       Serial.println();
     }
-    if(((char)payload[0] == 'f' || (char)payload[0] == 'F') && ((char)payload[0] == 'i' || (char)payload[0] == 'I') && ((char)payload[0] == 'n' || (char)payload[0] == 'N') && ((char)payload[0] == 'd' || (char)payload[0] == 'D'))
+    if((char)payload[0] == 'f')
     {
       REMINDS = 2;
       
@@ -697,11 +713,11 @@ void reconnect()
   {
     Serial.print(F("Attempting MQTT connection..."));
     // Attempt to connect
-    if (client.connect("ESP32_ClientID"))
+    if (client.connect("ESP32_PILL_ClientID"))
     {
       Serial.println(F("connected in reconnect() function."));
       // Once connected, publish an announcement...
-      client.publish(mqtt_pub_topic, "ESP32_reconnected");
+      client.publish(mqtt_pub_topic, "ESP32_PILL_reconnected");
       // ... and resubscribe
       client.subscribe(mqtt_sub_reminds);
     }
@@ -721,20 +737,21 @@ void findBox()
   if(REMINDS == 2)
   {
     lcd.clear();
-    lcd.setCursor(3,0);
-    lcd.print("I'm here!"); //9 chars
-    lcd.setCursor(4,0);
-    lcd.print("I'm here!"); //9 chars
+    if(millis() - lastDisplay >= displayGap)
+    {
+      lcd.setCursor(3,0);
+      lcd.print("I'm here!"); //9 chars
+      lcd.setCursor(4,1);
+      lcd.print("I'm here!"); //9 chars
 
-    if(millis() - lastRing >= buzzerGap)
-    {
-      digitalWrite(BUZZER_PIN, HIGH);
-      lastRing = millis();
+      lastDisplay = millis();
     }
-    else
-    {
-      digitalWrite(BUZZER_PIN, LOW);
-    }
+
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(100);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(100);
+    digitalWrite(BUZZER_PIN, HIGH);
     
     ///////////// button ONOFF : mode_ALARM /////////////////
     int readingOO = digitalRead(B_ONOFF);
@@ -792,15 +809,15 @@ void Alarm()
         lastDisplay = millis();
       }
       
-      if(millis() - lastRing >= (buzzerGap - 350))
-      {
-        digitalWrite(BUZZER_PIN, HIGH);
-        lastRing = millis();
-      }
-      else
-      {
-        digitalWrite(BUZZER_PIN, LOW);
-      }
+      digitalWrite(BUZZER_PIN, HIGH);
+      delay(100);
+      digitalWrite(BUZZER_PIN, LOW);
+      delay(100);
+      digitalWrite(BUZZER_PIN, HIGH);
+      delay(100);
+      digitalWrite(BUZZER_PIN, LOW);
+      delay(100);
+      digitalWrite(BUZZER_PIN, HIGH);
     }
     else
     {
