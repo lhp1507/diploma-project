@@ -6,8 +6,8 @@
  *    BUZZER  <----->   14
  *    B_SET   <----->   36
  *    B_PLUS  <----->   39
- *    B_MINUS <----->   35
- *    B_ONOFF <----->   34
+ *    B_MINUS <----->   34
+ *    B_ONOFF <----->   35
  *    SDA     <----->   21
  *    SCL     <----->   22
  */
@@ -38,8 +38,8 @@ DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
 #define BUZZER_CHANNEL  0
 #define B_SET     36    //nút set menu
 #define B_PLUS    39    //nút CỘNG
-#define B_MINUS   35    //nút TRỪ
-#define B_ONOFF   34    //nút bật/tắt báo thức
+#define B_MINUS   34    //nút TRỪ
+#define B_ONOFF   35    //nút bật/tắt báo thức
 
 #define mode_ON   1
 #define mode_OFF  0
@@ -132,13 +132,13 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   static volatile uint8_t menu;
 
 //c. báo thức:
-  static volatile unsigned long alarm_hour = 0, alarm_minute = 0; //Giữ giờ báo thức mặc định hiện tại là 00:00
-  static volatile unsigned long alarm_sec;
+  static volatile unsigned long remind_hour = 0, remind_minute = 0; //Giữ giờ báo thức mặc định hiện tại là 00:00
+  static volatile unsigned long remind_sec;
   String sec_to_mqtt;
 
-  static volatile uint16_t alarm_left; //Số báo thức còn lại
+  static volatile uint16_t remind_left; //Số báo thức còn lại
   
-  static volatile byte mode_ALARM = mode_ON;
+  static volatile byte mode_REMIND = mode_ON;
   /*
    * REMINDS:
    * 1 - "Alarm" nhận từ mqtt
@@ -482,13 +482,13 @@ void loop()
         buttonStatePL = readingPL;
         if(buttonStatePL == LOW)
         {
-          if(alarm_hour == 23)
+          if(remind_hour == 23)
           {
-            alarm_hour = 0;
+            remind_hour = 0;
           }
           else
           {
-            alarm_hour++;
+            remind_hour++;
           }
         }
       }
@@ -507,13 +507,13 @@ void loop()
         buttonStateMN = readingMN;
         if(buttonStateMN == LOW)
         {
-          if(alarm_hour == 0)
+          if(remind_hour == 0)
           {
-            alarm_hour = 23;
+            remind_hour = 23;
           }
           else
           {
-            alarm_hour--;
+            remind_hour--;
           }
         }
       }
@@ -525,15 +525,15 @@ void loop()
       //Display set HOUR:
       lcd.clear();
       lcd.setCursor(0,0);
-      lcd.print("Set alarm hour:"); //15char
+      lcd.print("Set remind hour:"); //15char
     
       //Display HOUR:
       lcd.setCursor(0,1);
-      if(alarm_hour < 10)
+      if(remind_hour < 10)
       {
         lcd.write('0');
       }
-      lcd.print(alarm_hour, DEC);
+      lcd.print(remind_hour, DEC);
       
       lastDisplay = millis();
     }
@@ -555,13 +555,13 @@ void loop()
         buttonStatePL = readingPL;
         if(buttonStatePL == LOW)
         {
-          if(alarm_minute == 59)
+          if(remind_minute == 59)
           {
-            alarm_minute = 0;
+            remind_minute = 0;
           }
           else
           {
-            alarm_minute++;
+            remind_minute++;
           }
         }
       }
@@ -580,13 +580,13 @@ void loop()
         buttonStateMN = readingMN;
         if(buttonStateMN == LOW)
         {
-          if(alarm_minute == 0)
+          if(remind_minute == 0)
           {
-            alarm_minute = 59;
+            remind_minute = 59;
           }
           else
           {
-            alarm_minute--;
+            remind_minute--;
           }
         }
       }
@@ -598,15 +598,15 @@ void loop()
       //Display set MINUTE:
       lcd.clear();
       lcd.setCursor(0,0);
-      lcd.print("Set alarm min.:"); //15char
+      lcd.print("Set remind min.:"); //15char
     
       //Display MINUTE:
       lcd.setCursor(0,1);
-      if(alarm_minute < 10)
+      if(remind_minute < 10)
       {
         lcd.write('0');
       }
-      lcd.print(alarm_minute, DEC);
+      lcd.print(remind_minute, DEC);
 
       lastDisplay = millis();
     }
@@ -616,11 +616,11 @@ void loop()
   {
     lcd.clear();
     lcd.setCursor(0,0);
-    lcd.print("Saved alarm");
+    lcd.print("Saved remind");
 
     //Chuyển thời gian hẹn giờ đã nhập về giây:
-    alarm_sec = (alarm_hour*60 + alarm_minute)*60;
-    sec_to_mqtt = "G" + String(alarm_sec);
+    remind_sec = (remind_hour*60 + remind_minute)*60;
+    sec_to_mqtt = "G" + String(remind_sec);
     
     sec_to_mqtt.toCharArray(bufferG, (sec_to_mqtt.length() + 1));
     client.publish(mqtt_pub_topic, bufferG);
@@ -687,20 +687,20 @@ void callback(char* topic, byte* payload, unsigned int length)
     if((char)payload[0] == 'C')
     {
       pload.remove(0,1);
-      String ALeft = pload;
-      alarm_left = ALeft.toInt();
+      String RLeft = pload;
+      remind_left = RLeft.toInt();
 
-      Serial.print("payload[0] = 'C' -> ALeft = ");
-      Serial.println(ALeft);
-      Serial.print("alarm_left = ");
-      Serial.println(alarm_left);
+      Serial.print("payload[0] = 'C' -> RLeft = ");
+      Serial.println(RLeft);
+      Serial.print("remind_left = ");
+      Serial.println(remind_left);
       Serial.println();
     }
     if((char)payload[0] == 'f')
     {
       REMINDS = 2;
       
-      Serial.print("payload in 'Find' - REMINDS: ");
+      Serial.print("payload in 'find' - REMINDS: ");
       Serial.println(REMINDS);
       Serial.println();
     }
@@ -753,12 +753,11 @@ void findBox()
     }
 
     digitalWrite(BUZZER_PIN, HIGH);
-    delay(100);
+    delay(200);
     digitalWrite(BUZZER_PIN, LOW);
-    delay(100);
-    digitalWrite(BUZZER_PIN, HIGH);
+    delay(200);
     
-    ///////////// button ONOFF : mode_ALARM /////////////////
+    ///////////// button ONOFF : mode_REMIND /////////////////
     int readingOO = digitalRead(B_ONOFF);
     if(readingOO != lastButtonStateOO)
     {
@@ -788,8 +787,8 @@ void printAlarmLEFT()
   lcd.setCursor(0,1);
   lcd.print("Alarm left: "); //11char
 
-  lcd.print(alarm_left, DEC);
-  if(alarm_left < 10)
+  lcd.print(remind_left, DEC);
+  if(remind_left < 10)
   {
     lcd.setCursor(13,1);
     lcd.print("   ");
@@ -801,7 +800,7 @@ void Alarm()
 {
     if(REMINDS == 1)
     {
-      mode_ALARM = mode_ON;
+      mode_REMIND = mode_ON;
       Serial.println(F("Alarm..."));
       if(millis() - lastDisplay >= displayGap)
       {
@@ -818,18 +817,13 @@ void Alarm()
       delay(100);
       digitalWrite(BUZZER_PIN, LOW);
       delay(100);
-      digitalWrite(BUZZER_PIN, HIGH);
-      delay(100);
-      digitalWrite(BUZZER_PIN, LOW);
-      delay(100);
-      digitalWrite(BUZZER_PIN, HIGH);
     }
     else
     {
       digitalWrite(BUZZER_PIN, LOW);
     }
   
-    ///////////// button ONOFF : mode_ALARM /////////////////
+    ///////////// button ONOFF : mode_REMIND /////////////////
     int readingOO = digitalRead(B_ONOFF);
     if(readingOO != lastButtonStateOO)
     {
@@ -842,10 +836,10 @@ void Alarm()
         buttonStateOO = readingOO;
         if(buttonStateOO == LOW)
         {
-          if(mode_ALARM == mode_ON)
+          if(mode_REMIND == mode_ON)
           {
             lcd.clear();
-            mode_ALARM = mode_OFF;
+            mode_REMIND = mode_OFF;
             digitalWrite(BUZZER_PIN, LOW);
             REMINDS = 0;
             menu = 0;
