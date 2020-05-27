@@ -313,7 +313,7 @@ void setup()
   pinMode(B_PLUS, INPUT);
   pinMode(B_MINUS, INPUT);
   pinMode(B_ONOFF, INPUT);
-//  attachInterrupt(digitalPinToInterrupt(B_ONOFF), Bonoff, FALLING);
+
 
   //FS
   loadSPIFFSConfigFile();
@@ -383,7 +383,8 @@ void setup()
 
   //if you get here you have connected to the WiFi
   Serial.println(F("WiFi connected ... yeey"));
-  
+
+  lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("WIFI connected"); //14
   
@@ -716,6 +717,10 @@ void reconnect()
     if (client.connect("ESP32_PILL_ClientID"))
     {
       Serial.println(F("connected in reconnect() function."));
+      lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("MQTT reconnected"); //16 char
+      
       // Once connected, publish an announcement...
       client.publish(mqtt_pub_topic, "ESP32_PILL_reconnected");
       // ... and resubscribe
