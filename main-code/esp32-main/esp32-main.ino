@@ -417,7 +417,8 @@ void setup()
   connectmqtt();
   //
   menu = 0;
-  
+
+  delay(500);
   lcd.clear();
   lcd.backlight();
   lcd.setCursor(0,0);
