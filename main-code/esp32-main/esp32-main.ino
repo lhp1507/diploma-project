@@ -1,15 +1,18 @@
 /*
  * NOTE:
+ * See pin OK to use: https://espeasy.readthedocs.io/en/latest/Reference/GPIO.html#best-pins-to-use-on-esp32
+ * GPIO12 -> OK OUTPUT (Boot fail if pulled HIGH)
+ * Tụ 10uF gắn vào EN để auto boot
  * Pin map:
- *    Device  <----->  ESP32
- *    DHT11   <----->   12
- *    BUZZER  <----->   14
- *    B_SET   <----->   36
- *    B_PLUS  <----->   39
- *    B_MINUS <----->   34
- *    B_ONOFF <----->   35
- *    SDA     <----->   21
- *    SCL     <----->   22
+ *    Device  <----->  ESP32  --->  Purpose
+ *    DHT11   <----->   19    --->  INPUT
+ *    BUZZER  <----->   25    --->  OUTPUT
+ *    B_SET   <----->   36    --->  INPUT
+ *    B_PLUS  <----->   39    --->  INPUT
+ *    B_MINUS <----->   34    --->  INPUT
+ *    B_ONOFF <----->   35    --->  INPUT
+ *    SDA     <----->   21    --->  OUTPUT
+ *    SCL     <----->   22    --->  OUTPUT
  */
 #include <FS.h>
 #include <SPIFFS.h>
@@ -31,10 +34,10 @@
  * cấu hình dht11 
  */
 #define DHTTYPE   DHT11  //loại dht sử dụng
-#define DHTPIN    12       //chân nhận dữ liệu
+#define DHTPIN    19       //chân nhận dữ liệu
 DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
 
-#define BUZZER_PIN      14
+#define BUZZER_PIN      25
 #define BUZZER_CHANNEL  0
 #define B_SET     36    //nút set menu
 #define B_PLUS    39    //nút CỘNG
@@ -137,7 +140,7 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   String sec_to_mqtt;
 
   static volatile uint16_t remind_left; //Số báo thức còn lại
-  
+  static volatile uint16_t remind_left_old;
   static volatile byte mode_REMIND = mode_ON;
   /*
    * REMINDS:
@@ -154,7 +157,10 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   unsigned long sendInterval = 10000; //10s
   unsigned long displayGap = 150;
   unsigned long buzzerGap = 500;
-
+  
+  unsigned long backlightGap = 10000; //sau 10s không nhấn nút thì tắt đèn nền
+  unsigned long pressTime = 0;
+  
   char bufferG[20];
   char bufferT[5];
   char bufferH[5];
@@ -302,6 +308,8 @@ void setup()
   lcd.print("Everything is");
   lcd.setCursor(0,1);
   lcd.print("almost done");
+  delay(500);
+  lcd.noBacklight();
   
   /*
    * Cài đặt MODE cho các pin:
@@ -387,6 +395,7 @@ void setup()
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("WIFI connected"); //14
+  delay(500);
   
   //read updated parameters
   strncpy(mqtt_server, custom_mqtt_server.getValue(), sizeof(mqtt_server));
@@ -410,6 +419,7 @@ void setup()
   menu = 0;
   
   lcd.clear();
+  lcd.backlight();
   lcd.setCursor(0,0);
   lcd.print("Done!");
 
@@ -429,6 +439,7 @@ void loop()
   {
     reconnect();
   }
+  
 ///////////// button SET : menu /////////////////
   int readingSET = digitalRead(B_SET);
   if(readingSET != lastButtonStateSET)
@@ -442,6 +453,9 @@ void loop()
       buttonStateSET = readingSET;
       if(buttonStateSET == LOW)
       {
+        lcd.backlight();
+        pressTime = millis();
+        
         menu++;
         Serial.print("menu (B_SET pressed): ");
         Serial.println(menu);
@@ -482,6 +496,9 @@ void loop()
         buttonStatePL = readingPL;
         if(buttonStatePL == LOW)
         {
+          lcd.backlight();
+          pressTime = millis();
+          
           if(remind_hour == 23)
           {
             remind_hour = 0;
@@ -507,6 +524,9 @@ void loop()
         buttonStateMN = readingMN;
         if(buttonStateMN == LOW)
         {
+          lcd.backlight();
+          pressTime = millis();
+          
           if(remind_hour == 0)
           {
             remind_hour = 23;
@@ -555,6 +575,9 @@ void loop()
         buttonStatePL = readingPL;
         if(buttonStatePL == LOW)
         {
+          lcd.backlight();
+          pressTime = millis();
+          
           if(remind_minute == 59)
           {
             remind_minute = 0;
@@ -580,6 +603,9 @@ void loop()
         buttonStateMN = readingMN;
         if(buttonStateMN == LOW)
         {
+          lcd.backlight();
+          pressTime = millis();
+          
           if(remind_minute == 0)
           {
             remind_minute = 59;
@@ -637,6 +663,11 @@ void loop()
   {
     findBox();
   }
+///////////// sau 10s tu tat hinh nen ///////////
+  if((millis() - pressTime) > backlightGap)
+  {
+    lcd.noBacklight();
+  }
   
   client.loop();
 }
@@ -651,6 +682,7 @@ void connectmqtt()
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("MQTT connected"); //14
+    delay(500);
     
     client.subscribe(mqtt_sub_reminds); //topic=Demo
     client.publish(mqtt_pub_topic, "PILL_connected to MQTT");
@@ -720,6 +752,7 @@ void reconnect()
       lcd.clear();
       lcd.setCursor(0,0);
       lcd.print("MQTT reconnected"); //16 char
+      delay(500);
       
       // Once connected, publish an announcement...
       client.publish(mqtt_pub_topic, "ESP32_PILL_reconnected");
@@ -742,6 +775,7 @@ void findBox()
   if(REMINDS == 2)
   {
     lcd.clear();
+    lcd.backlight();
     if(millis() - lastDisplay >= displayGap)
     {
       lcd.setCursor(3,0);
@@ -770,6 +804,9 @@ void findBox()
         buttonStateOO = readingOO;
         if(buttonStateOO == LOW)
         {
+          lcd.backlight();
+          pressTime = millis();
+          
           lcd.clear();
           digitalWrite(BUZZER_PIN, LOW);
           REMINDS = 0;
@@ -782,19 +819,6 @@ void findBox()
   }
 }
 
-void printAlarmLEFT()
-{
-  lcd.setCursor(0,1);
-  lcd.print("Alarm left: "); //11char
-
-  lcd.print(remind_left, DEC);
-  if(remind_left < 10)
-  {
-    lcd.setCursor(13,1);
-    lcd.print("   ");
-  }
-}
-
 //Bật-tắt báo thức
 void Alarm()
 {
@@ -802,6 +826,7 @@ void Alarm()
     {
       mode_REMIND = mode_ON;
       Serial.println(F("Alarm..."));
+      lcd.backlight();
       if(millis() - lastDisplay >= displayGap)
       {
         lcd.clear();
@@ -823,7 +848,7 @@ void Alarm()
       digitalWrite(BUZZER_PIN, LOW);
     }
   
-    ///////////// button ONOFF : mode_REMIND /////////////////
+///////////// button ONOFF : mode_REMIND /////////////////
     int readingOO = digitalRead(B_ONOFF);
     if(readingOO != lastButtonStateOO)
     {
@@ -838,6 +863,9 @@ void Alarm()
         {
           if(mode_REMIND == mode_ON)
           {
+            lcd.backlight();
+            pressTime = millis();
+            
             lcd.clear();
             mode_REMIND = mode_OFF;
             digitalWrite(BUZZER_PIN, LOW);
@@ -852,6 +880,18 @@ void Alarm()
     lastButtonStateOO = readingOO;
 }
 
+void printAlarmLEFT()
+{
+  lcd.setCursor(0,1);
+  lcd.print("Alarm left: "); //11char
+
+  lcd.print(remind_left, DEC);
+  if(remind_left < 10)
+  {
+    lcd.setCursor(13,1);
+    lcd.print("   ");
+  }
+}
 
 void DisplayDHT()
 {
