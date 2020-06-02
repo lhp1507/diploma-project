@@ -396,6 +396,7 @@ void setup()
   lcd.setCursor(0,0);
   lcd.print("WIFI connected"); //14
   delay(500);
+  lcd.clear();
   
   //read updated parameters
   strncpy(mqtt_server, custom_mqtt_server.getValue(), sizeof(mqtt_server));
@@ -418,8 +419,6 @@ void setup()
   //
   menu = 0;
 
-  delay(500);
-  lcd.clear();
   lcd.backlight();
   lcd.setCursor(0,0);
   lcd.print("Done!");
@@ -429,7 +428,6 @@ void setup()
   
   delay(1000);
   lcd.clear();
-  lcd.setCursor(0,0);
 }
 
 
@@ -658,7 +656,7 @@ void loop()
   }
   if(menu == 4)
   {
-    Alarm();
+    remind();
   }
   if(menu == 5)
   {
@@ -684,6 +682,7 @@ void connectmqtt()
     lcd.setCursor(0,0);
     lcd.print("MQTT connected"); //14
     delay(500);
+    lcd.clear();
     
     client.subscribe(mqtt_sub_reminds); //topic=Demo
     client.publish(mqtt_pub_topic, "PILL_connected to MQTT");
@@ -754,6 +753,7 @@ void reconnect()
       lcd.setCursor(0,0);
       lcd.print("MQTT reconnected"); //16 char
       delay(500);
+      lcd.clear();
       
       // Once connected, publish an announcement...
       client.publish(mqtt_pub_topic, "ESP32_PILL_reconnected");
@@ -821,7 +821,7 @@ void findBox()
 }
 
 //Bật-tắt báo thức
-void Alarm()
+void remind()
 {
     if(REMINDS == 1)
     {
