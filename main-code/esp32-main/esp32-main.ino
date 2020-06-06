@@ -736,6 +736,14 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(REMINDS);
       Serial.println();
     }
+    if((char)payload[0] == 'o')
+    {      
+      lcd.clear();
+      digitalWrite(BUZZER_PIN, LOW);
+      REMINDS = 0;
+      menu = 0;
+      Serial.print("callback off");
+    }
   }
 }
 
@@ -812,6 +820,9 @@ void findBox()
           digitalWrite(BUZZER_PIN, LOW);
           REMINDS = 0;
           menu = 0;
+          
+          client.publish(mqtt_pub_topic, "off");
+          
           Serial.print("FIND (B_ONOFF pressed)");
         }
       }
@@ -872,6 +883,9 @@ void remind()
             digitalWrite(BUZZER_PIN, LOW);
             REMINDS = 0;
             menu = 0;
+
+            client.publish(mqtt_pub_topic, "off");
+            
             Serial.print("reminds (B_ONOFF pressed): ");
             Serial.println(REMINDS);
           }
