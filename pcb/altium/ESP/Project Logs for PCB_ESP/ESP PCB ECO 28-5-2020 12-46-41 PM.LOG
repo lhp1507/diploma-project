@@ -1,0 +1,152 @@
+Added Component: Designator=C_EN(CP1/2)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Description 1"; Value = "10 => 220uF/6,3V/10V - 10uF => 100uF/16V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Description 2"; Value = "0,1uF => 33uF/50V - 10uF => 22uF/63V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Description 3"; Value = "0,47uF => 10uF/100V"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = "10uF/50V"; VariantName = "[No Variations]"
+Added Component: Designator=CN_Button(CON.HD1X6H)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Digikey Part link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "Open DataSheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "H:\LIBRARY\LIBRARY.Datasheet\"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer P/N"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Hoang Nguyen"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor P/N"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=CN_BUZZ(CON.HDR1X4L)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Digikey Part link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "Open DataSheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "H:\LIBRARY\LIBRARY.Datasheet\"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer P/N"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "NKIM"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor P/N"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=CN_DHT(CON.HDR1X3)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Digikey Part link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "Open DataSheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "H:\LIBRARY\LIBRARY.Datasheet\"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer P/N"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "NKIM"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor P/N"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=CN_LCD(CON.HDR1X4L)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Digikey Part link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "Open DataSheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "H:\LIBRARY\LIBRARY.Datasheet\"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer P/N"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "NKIM"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor P/N"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=CN_Source(CON.HDR1X2A)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "ComponentLink1Description"; Value = "Digikey Part link"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink1URL"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2Description"; Value = "Open DataSheet"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "ComponentLink2URL"; Value = "H:\LIBRARY\LIBRARY.Datasheet\"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer P/N"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Hoang Nguyen"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Vendor P/N"; Value = ""; VariantName = "[No Variations]"
+Added Component: Designator=D_Buzz(D1A)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Value"; Value = "1N4007"; VariantName = "[No Variations]"
+Added Component: Designator=ESP32DEVKIT(ESP32devKitV1)
+Add component. Clean all parameters for all variants
+Added Component: Designator=Q_Buzz(QTO-92)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = ""; Value = "C2383"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Value"; Value = "C1815"; VariantName = "[No Variations]"
+Added Component: Designator=R_Buzz(RES-1/4W)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Class"; Value = "Passive"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Generic Components"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "08/06/2000"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Hobart Technology Centre"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SubClass"; Value = "R"; VariantName = "[No Variations]"
+Added Component: Designator=R_QBuzz(RES-1/4W)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Class"; Value = "Passive"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Generic Components"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "08/06/2000"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Hobart Technology Centre"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SubClass"; Value = "R"; VariantName = "[No Variations]"
+Added Component: Designator=R_Source(RES-1/4W)
+Add component. Clean all parameters for all variants
+Add component (AddParameter): Name = "Class"; Value = "Passive"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "Generic Components"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Published"; Value = "08/06/2000"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Publisher"; Value = "Altium Hobart Technology Centre"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "SubClass"; Value = "R"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=C_EN-2
+Added Pin To Net: NetName=GND Pin=CN_Button-1
+Added Pin To Net: NetName=GND Pin=CN_DHT-3
+Added Pin To Net: NetName=GND Pin=CN_LCD-4
+Added Pin To Net: NetName=GND Pin=CN_Source-2
+Added Pin To Net: NetName=GND Pin=ESP32DEVKIT-14
+Added Pin To Net: NetName=GND Pin=ESP32DEVKIT-17
+Added Pin To Net: NetName=GND Pin=Q_Buzz-1
+Added Net: Name=GND
+Added Pin To Net: NetName=NetC_EN_1 Pin=C_EN-1
+Added Pin To Net: NetName=NetC_EN_1 Pin=ESP32DEVKIT-1
+Added Net: Name=NetC_EN_1
+Added Pin To Net: NetName=NetCN_Button_2 Pin=CN_Button-2
+Added Pin To Net: NetName=NetCN_Button_2 Pin=ESP32DEVKIT-5
+Added Net: Name=NetCN_Button_2
+Added Pin To Net: NetName=NetCN_Button_3 Pin=CN_Button-3
+Added Pin To Net: NetName=NetCN_Button_3 Pin=ESP32DEVKIT-4
+Added Net: Name=NetCN_Button_3
+Added Pin To Net: NetName=NetCN_Button_4 Pin=CN_Button-4
+Added Pin To Net: NetName=NetCN_Button_4 Pin=ESP32DEVKIT-3
+Added Net: Name=NetCN_Button_4
+Added Pin To Net: NetName=NetCN_Button_5 Pin=CN_Button-5
+Added Pin To Net: NetName=NetCN_Button_5 Pin=ESP32DEVKIT-2
+Added Net: Name=NetCN_Button_5
+Added Pin To Net: NetName=NetCN_BUZZ_1 Pin=CN_BUZZ-1
+Added Pin To Net: NetName=NetCN_BUZZ_1 Pin=D_Buzz-2
+Added Pin To Net: NetName=NetCN_BUZZ_1 Pin=R_Buzz-2
+Added Net: Name=NetCN_BUZZ_1
+Added Pin To Net: NetName=NetCN_BUZZ_4 Pin=CN_BUZZ-4
+Added Pin To Net: NetName=NetCN_BUZZ_4 Pin=D_Buzz-1
+Added Pin To Net: NetName=NetCN_BUZZ_4 Pin=Q_Buzz-2
+Added Net: Name=NetCN_BUZZ_4
+Added Pin To Net: NetName=NetCN_DHT_2 Pin=CN_DHT-2
+Added Pin To Net: NetName=NetCN_DHT_2 Pin=ESP32DEVKIT-25
+Added Net: Name=NetCN_DHT_2
+Added Pin To Net: NetName=NetCN_LCD_1 Pin=CN_LCD-1
+Added Pin To Net: NetName=NetCN_LCD_1 Pin=ESP32DEVKIT-29
+Added Net: Name=NetCN_LCD_1
+Added Pin To Net: NetName=NetCN_LCD_2 Pin=CN_LCD-2
+Added Pin To Net: NetName=NetCN_LCD_2 Pin=ESP32DEVKIT-26
+Added Net: Name=NetCN_LCD_2
+Added Pin To Net: NetName=NetCN_LCD_3 Pin=CN_LCD-3
+Added Pin To Net: NetName=NetCN_LCD_3 Pin=R_Source-1
+Added Net: Name=NetCN_LCD_3
+Added Pin To Net: NetName=NetCN_Source_1 Pin=CN_Source-1
+Added Pin To Net: NetName=NetCN_Source_1 Pin=ESP32DEVKIT-15
+Added Pin To Net: NetName=NetCN_Source_1 Pin=R_Source-2
+Added Net: Name=NetCN_Source_1
+Added Pin To Net: NetName=NetESP32DEVKIT_8 Pin=ESP32DEVKIT-8
+Added Pin To Net: NetName=NetESP32DEVKIT_8 Pin=R_QBuzz-1
+Added Net: Name=NetESP32DEVKIT_8
+Added Pin To Net: NetName=NetQ_Buzz_3 Pin=Q_Buzz-3
+Added Pin To Net: NetName=NetQ_Buzz_3 Pin=R_QBuzz-2
+Added Net: Name=NetQ_Buzz_3
+Added Pin To Net: NetName=VCC Pin=CN_Button-6
+Added Pin To Net: NetName=VCC Pin=CN_DHT-1
+Added Pin To Net: NetName=VCC Pin=ESP32DEVKIT-16
+Added Pin To Net: NetName=VCC Pin=R_Buzz-1
+Added Net: Name=VCC
+Added Class: Name=ESP
+Added Room: Name=ESP
