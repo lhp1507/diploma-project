@@ -1,2 +1,3 @@
-# diploma-project
-Our group Diploma Project at DUT (Danang University of Technology) - Đẩu + Quang + Phú - 15DT3
+# medication-reminder-system
+Our group diploma project at DUT (Danang University of Technology)
+by Trần Thế Đẩu, Lê Hữu Phú, Nguyễn Ngọc Quang.
