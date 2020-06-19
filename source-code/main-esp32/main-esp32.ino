@@ -470,38 +470,45 @@ void loop()
   }
   lastButtonStateSET = readingSET;
 
-///////////// button BOX /////////////////
-  int readingBOX = digitalRead(B_BOX);
-  if(readingBOX != lastButtonStateBOX)
-  {
-    lastDebounceTimeBOX = millis();
-  }
-  if((millis() - lastDebounceTimeBOX) > debounceDelayBOX)
-  {
-    if(readingBOX != buttonStateBOX)
-    {
-      buttonStateBOX = readingBOX;
-      if(buttonStateBOX == LOW)
-      {
-        BOX = true;
-        Serial.print("B_BOX pressed");
-      }
-    }
-  }
-  lastButtonStateSET = readingSET;
-
   
 ///////////// menu = 0 /////////////////
   if(menu == 0)
   {
     DisplayDHT();
     printAlarmLEFT();
+
+    ///////////// button BOX /////////////////
+    int readingBOX = digitalRead(B_BOX);
+    if(readingBOX != lastButtonStateBOX)
+    {
+      lastDebounceTimeBOX = millis();
+    }
+    if((millis() - lastDebounceTimeBOX) > debounceDelayBOX)
+    {
+      if(readingBOX != buttonStateBOX)
+      {
+        buttonStateBOX = readingBOX;
+        if(buttonStateBOX == LOW)
+        {
+          BOX = true;
+          Serial.print("B_BOX pressed: BOX = ");
+          Serial.print(B_BOX);
+        }
+        else
+        {
+          BOX = false;
+          Serial.print("B_BOX unpressed: BOX = ");
+          Serial.print(B_BOX);
+        }
+      }
+    }
+    lastButtonStateBOX = readingBOX;
     
     if((REMINDS == 1) && (BOX == true))
     {
       menu = 4;
     }
-    if((REMINDS == 2) && (BOX == true))
+    if(REMINDS == 2)
     {
       menu = 5;
     }
