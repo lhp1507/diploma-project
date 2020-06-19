@@ -147,7 +147,6 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   String sec_to_mqtt;
 
   static volatile uint16_t remind_left; //Số báo thức còn lại
-  static volatile uint16_t remind_left_old;
   static volatile byte mode_REMIND = mode_ON;
   /*
    * REMINDS:
