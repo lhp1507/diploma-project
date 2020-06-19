@@ -43,6 +43,7 @@ DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
 #define B_PLUS    39    //nút CỘNG
 #define B_MINUS   34    //nút TRỪ
 #define B_ONOFF   35    //nút bật/tắt báo thức
+#define B_BOX     32    //nút xử lý hộp thuốc
 
 #define mode_ON   1
 #define mode_OFF  0
@@ -105,6 +106,12 @@ int buttonStateOO;             // the current reading from the input pin
 int lastButtonStateOO = LOW;   // the previous reading from the input pin
 unsigned long lastDebounceTimeOO = 0;  // the last time the output pin was toggled
 unsigned long debounceDelayOO = 50;    // the debounce time; increase if the output flickers
+
+int buttonStateBOX;             // the current reading from the input pin
+int lastButtonStateBOX = LOW;   // the previous reading from the input pin
+unsigned long lastDebounceTimeBOX = 0;  // the last time the output pin was toggled
+unsigned long debounceDelayBOX = 50;    // the debounce time; increase if the output flickers
+bool BOX = true; //true - Box put on ; false - Box put off
 //END BUTTON config
 
 char configFileName[] = "/config.json";
@@ -321,7 +328,7 @@ void setup()
   pinMode(B_PLUS, INPUT);
   pinMode(B_MINUS, INPUT);
   pinMode(B_ONOFF, INPUT);
-
+  pinMode(B_BOX, INPUT_PULLUP);
 
   //FS
   loadSPIFFSConfigFile();
@@ -462,6 +469,27 @@ void loop()
     }
   }
   lastButtonStateSET = readingSET;
+
+///////////// button BOX /////////////////
+  int readingBOX = digitalRead(B_BOX);
+  if(readingBOX != lastButtonStateBOX)
+  {
+    lastDebounceTimeBOX = millis();
+  }
+  if((millis() - lastDebounceTimeBOX) > debounceDelayBOX)
+  {
+    if(readingBOX != buttonStateBOX)
+    {
+      buttonStateBOX = readingBOX;
+      if(buttonStateBOX == LOW)
+      {
+        BOX = true;
+        Serial.print("B_BOX pressed");
+      }
+    }
+  }
+  lastButtonStateSET = readingSET;
+
   
 ///////////// menu = 0 /////////////////
   if(menu == 0)
@@ -469,11 +497,11 @@ void loop()
     DisplayDHT();
     printAlarmLEFT();
     
-    if(REMINDS == 1)
+    if((REMINDS == 1) && (BOX == true))
     {
       menu = 4;
     }
-    if(REMINDS == 2)
+    if((REMINDS == 2) && (BOX == true))
     {
       menu = 5;
     }
@@ -834,7 +862,7 @@ void findBox()
 //Bật-tắt báo thức
 void remind()
 {
-    if(REMINDS == 1)
+    if((REMINDS == 1) && (BOX == true))
     {
       mode_REMIND = mode_ON;
       Serial.println(F("Alarm..."));
