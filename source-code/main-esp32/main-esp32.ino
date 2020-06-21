@@ -10,15 +10,16 @@
  *    B_SET   <----->   36    --->  INPUT
  *    B_PLUS  <----->   39    --->  INPUT
  *    B_MINUS <----->   34    --->  INPUT
- *    B_ONOFF <----->   35    --->  INPUT
+ *    B_OFF   <----->   35    --->  INPUT
  *    SDA     <----->   21    --->  OUTPUT
  *    SCL     <----->   22    --->  OUTPUT
  */
+ 
 #include <FS.h>
 #include <SPIFFS.h>
 #include <WebServer.h>
-#include <ArduinoJson.h>          //https://github.com/bblanchon/ArduinoJson
-#include <ESP_WiFiManager.h>              //https://github.com/khoih-prog/ESP_WiFiManager
+#include <ArduinoJson.h>        //https://github.com/bblanchon/ArduinoJson
+#include <ESP_WiFiManager.h>    //https://github.com/khoih-prog/ESP_WiFiManager
 
 #include <WiFi.h>
 
@@ -31,96 +32,97 @@
 
 #include <DHT.h>
 /*
- * cấu hình dht11 
+ * Cấu hình DHT11 
  */
-#define DHTTYPE   DHT11  //loại dht sử dụng
-#define DHTPIN    19       //chân nhận dữ liệu
+#define DHTTYPE   DHT11     //loại dht sử dụng
+#define DHTPIN    19        //chân nhận dữ liệu
 DHT dht(DHTPIN, DHTTYPE);   //cài đặt sử dụng DHT
+/*
+ * Kết thúc cấu hình DHT11
+ */
 
+/*
+ * Định nghĩa các chân tín hiệu
+ */
 #define BUZZER_PIN      25
 #define BUZZER_CHANNEL  0
 #define B_SET     36    //nút set menu
-#define B_PLUS    39    //nút CỘNG
-#define B_MINUS   34    //nút TRỪ
-#define B_ONOFF   35    //nút bật/tắt báo thức
+#define B_PLUS    39    //nút TĂNG
+#define B_MINUS   34    //nút GIẢM
+#define B_OFF     35    //nút TẮT báo thức
 #define B_BOX     32    //nút xử lý hộp thuốc
+/*
+ * Kết thúc định nghĩa chân tín hiệu
+ */
 
+//----- mode nhắc nhở (Bật/Tắt) -----//
 #define mode_ON   1
 #define mode_OFF  0
 
+//Lấy thông tin ID của Chip trong ESP32
 #define ESP_getChipId() ((uint32_t)ESP.getEfuseMac())
 
+//----- Định nghĩa độ dài tối đa của Tên Server và Port MQTT -----//
 #define MQTT_SERVER_MAX_LEN   40
 #define MQTT_SERVER_PORT_LEN  6
 
-#define mqtt_sub_reminds "Reminds"
-#define mqtt_pub_topic "Topic"
+//----- Các Topic subscribe và publish của MQTT -----//
+#define mqtt_sub_reminds  "Reminds"
+#define mqtt_pub_topic    "Topic"
 
 /*
- * icon:
+ * Khởi tạo các biểu tượng cho LCD:
  */
-byte temperature[8] = //biểu tượng nhiệt độ 
-{
-    B00100,
-    B01010,
-    B01010,
-    B01110,
-    B01110,
-    B11111,
-    B11111,
-    B01110
-};
-byte humidity[8] = //biểu tượng độ ẩm
-{
-    B00100,
-    B00100,
-    B01010,
-    B01010,
-    B10001,
-    B10001,
-    B10001,
-    B01110,
-};
-
-
+//----- Biểu tượng nhiệt độ -----//
+byte temperature[8] = { B00100, B01010, B01010, B01110, B01110, B11111, B11111, B01110 };
+//----- Biểu tượng độ ẩm -----//
+byte humidity[8]    = { B00100, B00100, B01010, B01010, B10001, B10001, B10001, B01110 };
 /*
- * BUTTON config
+ * Kết thúc khởi tạo các biểu tượng cho LCD
  */
-// riêng 
-int buttonStateSET;             // the current reading from the input pin
-int lastButtonStateSET = LOW;   // the previous reading from the input pin
+ 
+/*
+ * Cấu hình các nút nhấn
+ */
+//----- nút SET - menu điều khiển -----//
+int buttonStateSET;                     // the current reading from the input pin
+int lastButtonStateSET = LOW;           // the previous reading from the input pin
 unsigned long lastDebounceTimeSET = 0;  // the last time the output pin was toggled
 unsigned long debounceDelaySET = 50;    // the debounce time; increase if the output flickers
 
-int buttonStatePL;             // the current reading from the input pin
-int lastButtonStatePL = LOW;   // the previous reading from the input pin
-unsigned long lastDebounceTimePL = 0;  // the last time the output pin was toggled
-unsigned long debounceDelayPL = 50;    // the debounce time; increase if the output flickers
+//----- nút PLUS - tăng -----//
+int buttonStatePL;                      // the current reading from the input pin
+int lastButtonStatePL = LOW;            // the previous reading from the input pin
+unsigned long lastDebounceTimePL = 0;   // the last time the output pin was toggled
+unsigned long debounceDelayPL = 50;     // the debounce time; increase if the output flickers
 
-int buttonStateMN;             // the current reading from the input pin
-int lastButtonStateMN = LOW;   // the previous reading from the input pin
-unsigned long lastDebounceTimeMN = 0;  // the last time the output pin was toggled
-unsigned long debounceDelayMN = 50;    // the debounce time; increase if the output flickers
+//----- nút MINUS - giảm -----//
+int buttonStateMN;                      // the current reading from the input pin
+int lastButtonStateMN = LOW;            // the previous reading from the input pin
+unsigned long lastDebounceTimeMN = 0;   // the last time the output pin was toggled
+unsigned long debounceDelayMN = 50;     // the debounce time; increase if the output flickers
 
-int buttonStateOO;             // the current reading from the input pin
-int lastButtonStateOO = LOW;   // the previous reading from the input pin
-unsigned long lastDebounceTimeOO = 0;  // the last time the output pin was toggled
-unsigned long debounceDelayOO = 50;    // the debounce time; increase if the output flickers
+//----- nút OFF - tắt báo thức -----//
+int buttonStateOO;                      // the current reading from the input pin
+int lastButtonStateOO = LOW;            // the previous reading from the input pin
+unsigned long lastDebounceTimeOO = 0;   // the last time the output pin was toggled
+unsigned long debounceDelayOO = 50;     // the debounce time; increase if the output flickers
 
-int buttonStateBOX;             // the current reading from the input pin
-int lastButtonStateBOX = LOW;   // the previous reading from the input pin
+//----- nút BOX - nhận biết hộp đựng thuốc có được gắn vào hay không -----//
+int buttonStateBOX;                     // the current reading from the input pin
+int lastButtonStateBOX = LOW;           // the previous reading from the input pin
 unsigned long lastDebounceTimeBOX = 0;  // the last time the output pin was toggled
 unsigned long debounceDelayBOX = 50;    // the debounce time; increase if the output flickers
-bool BOX = true; //true - Box put on ; false - Box put off
-//END BUTTON config
-
-char configFileName[] = "/config.json";
+bool BOX = true;                        // true - Box put on ; false - Box put off
+/*
+ * Kết thúc cấu hình các nút nhấn
+ */
 
 // SSID and PW for your Router
 String Router_SSID;
 String Router_Pass;
 
-// SSID and PW for Config Portal
+// SSID and PW for Config Portal (Access Point mode)
 String AP_SSID;
 String AP_PASS;
 
@@ -128,59 +130,58 @@ char mqtt_server [MQTT_SERVER_MAX_LEN];
 char mqtt_port   [MQTT_SERVER_PORT_LEN] = "1883";
 
 WiFiClient espClient;
-PubSubClient client(espClient); //lib required for mqtt
+PubSubClient client(espClient);   //lib required for mqtt
 
-/*
- * cấu hình LCD: SDA:21; SCL:22
- */
+//----- cấu hình LCD - SDA: GPIO21; SCL: GPIO22 -----//
 LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lcd 16x2
 
 /*
- * khai báo các biến sử dụng
+ * Khai báo các biến sử dụng
  */
-//a. khai báo menu là biến volatile vì có thay đổi ở CT ngắt
+//----- Biến menu có nhiệm vụ thay đổi các nội dung cần thiết lập -----//
   static volatile uint8_t menu;
 
-//c. báo thức:
-  static volatile unsigned long remind_hour = 0, remind_minute = 0; //Giữ giờ báo thức mặc định hiện tại là 00:00
-  static volatile unsigned long remind_sec;
-  String sec_to_mqtt;
-
-  static volatile uint16_t remind_left; //Số báo thức còn lại
+//----- các biến sử dụng cho thời gian nhắc nhở -----//
+  static volatile unsigned long remind_hour = 0, remind_minute = 0; //Giữ giờ nhắc nhở mặc định hiện tại là 00:00
+  static volatile unsigned long remind_sec;                         //Lưu giá trị thời gian nhắc nhở dưới dạng giây
+  String sec_to_mqtt;                                               //Gửi giá trị của remind_sec lên Broker
+  static volatile uint16_t remind_left;                             //Số nhắc nhở còn lại
   static volatile byte mode_REMIND = mode_ON;
   /*
    * REMINDS:
-   * 1 - "Alarm" nhận từ mqtt
+   * 0 - không có gì
+   * 1 - chuỗi "Alarm" nhận từ Broker
    * 2 - tìm hộp thuốc
    */
   static volatile uint8_t REMINDS = 0;
-
+  
+//----- Các biến khác -----//
   unsigned long lastSend = 0;
   unsigned long lastRead = 0;
-  unsigned long lastRing = 0;
   unsigned long lastDisplay = 0;
-  unsigned long readInterval = 10000; //10s
-  unsigned long sendInterval = 10000; //10s
-  unsigned long displayGap = 150;
-  unsigned long buzzerGap = 500;
-  
+  unsigned long readInterval = 10000; //1 chu kỳ đọc là 10s
+  unsigned long sendInterval = 10000; //1 chu kỳ gửi là 10s
+  unsigned long displayGap = 150;     //Chu kỳ hiển thị của LCD
+  unsigned long pressTime = 0;        //Thời gian kể từ khi nhấn nút
   unsigned long backlightGap = 10000; //sau 10s không nhấn nút thì tắt đèn nền
-  unsigned long pressTime = 0;
-  
-  char bufferG[20];
-  char bufferT[5];
-  char bufferH[5];
+  char bufferG[20];                   //Chứa giá trị giây để publish lên broker
+  char bufferT[5];                    //Chứa giá trị nhiệt độ để publish lên broker
+  char bufferH[5];                    //Chứa giá trị độ ẩm để publish lên broker
+/*
+ * Kết thúc khai báo các biến sử dụng
+ */
+ 
+char configFileName[] = "/config.json"; //name for config file
+bool shouldSaveConfig = false;          //flag for saving data
 
-//flag for saving data
-bool shouldSaveConfig = false;
-
-//callback notifying us of the need to save config
+//---------- Hàm set biến lưu dữ liệu config ----------//
 void saveConfigCallback(void)
 {
   Serial.println(F("Should save config"));
   shouldSaveConfig = true;
 }
 
+//---------- Hàm đọc dữ liệu từ file Config ----------//
 bool loadSPIFFSConfigFile(void)
 {
   //clean FS, for testing
@@ -247,6 +248,7 @@ bool loadSPIFFSConfigFile(void)
   return true;
 }
 
+//---------- Hàm lưu dữ liệu mqtt server và port vào file Config ----------//
 bool saveSPIFFSConfigFile(void)
 {
   Serial.println(F("Saving config"));
@@ -273,16 +275,13 @@ bool saveSPIFFSConfigFile(void)
   //end save
 }
 
-
+//---------- Hàm setup - Cấu hình và khởi tạo các giá trị ban đầu ----------//
 void setup()
 {
-  Wire.begin();
+  //------ Mở các cổng kết nối -----//
   Serial.begin(115200);
-  pinMode(DHTPIN, INPUT);
+  Wire.begin();
   dht.begin();
-  /*
-   * LCD
-   */
   lcd.init();
   lcd.backlight();
 
@@ -306,7 +305,6 @@ void setup()
   lcd.print("Pill reminder");
   lcd.setCursor(0,1);
   lcd.print("Version: 1.0");
-  
   delay(1000);
   
   lcd.clear();
@@ -314,19 +312,17 @@ void setup()
   lcd.print("Everything is");
   lcd.setCursor(0,1);
   lcd.print("almost done");
-  delay(500);
+  delay(1000);
   lcd.noBacklight();
-  
-  /*
-   * Cài đặt MODE cho các pin:
-   */
+
+  //------ Cấu hình cho các PIN -----//
+  pinMode(DHTPIN, INPUT);
   pinMode(BUZZER_PIN, OUTPUT);
   digitalWrite(BUZZER_PIN, LOW);
-  //b. nút nhấn:
   pinMode(B_SET, INPUT);
   pinMode(B_PLUS, INPUT);
   pinMode(B_MINUS, INPUT);
-  pinMode(B_ONOFF, INPUT);
+  pinMode(B_OFF, INPUT);
   pinMode(B_BOX, INPUT_PULLUP);
 
   //FS
@@ -338,8 +334,6 @@ void setup()
   ESP_WMParameter custom_mqtt_server("mqtt_server", "mqtt_server", mqtt_server, MQTT_SERVER_MAX_LEN + 1);
   ESP_WMParameter custom_mqtt_port  ("mqtt_port",   "mqtt_port",   mqtt_port,   MQTT_SERVER_PORT_LEN + 1);
 
-  // Use this to default DHCP hostname to ESP8266-XXXXXX or ESP32-XXXXXX
-  //ESP_WiFiManager ESP_wifiManager;
   // Use this to personalize DHCP hostname (RFC952 conformed)
   ESP_WiFiManager ESP_wifiManager("AutoConnect-FSParams");
 
@@ -350,10 +344,9 @@ void setup()
   ESP_wifiManager.addParameter(&custom_mqtt_server);
   ESP_wifiManager.addParameter(&custom_mqtt_port);
 
-///////// RESET WIFI /////////////
-  //reset settings - for testing
+//----- RESET WIFI - for testing -----//
 //  ESP_wifiManager.resetSettings(); //just no command this line
-///////// RESET WIFI /////////////
+//----- RESET WIFI - for testing -----//
 
   ESP_wifiManager.setDebugOutput(true);
 
@@ -368,8 +361,8 @@ void setup()
   
   if (Router_SSID != "")
   {
-    ESP_wifiManager.setConfigPortalTimeout(30); //If no access point name has been previously entered disable timeout.
-    Serial.println(F("Got stored Credentials. Timeout 30s"));
+    ESP_wifiManager.setConfigPortalTimeout(10); //If no access point name has been previously entered disable timeout.
+    Serial.println(F("Got stored Credentials. Timeout 10s"));
   }
   else
   {
@@ -379,12 +372,11 @@ void setup()
   String chipID = String(ESP_getChipId(), HEX);
   chipID.toUpperCase();
 
-  // SSID and PW for Config Portal
+  // SSID for Config Portal
   AP_SSID = "ESP_" + chipID + "_AutoConnectAP";
-//  AP_PASS = "MyESP_" + chipID;
 
-  // Get Router SSID and PASS from EEPROM, then open Config portal AP named "ESP_XXXXXX_AutoConnectAP" and PW "MyESP_XXXXXX"
-  // 1) If got stored Credentials, Config portal timeout is 60s
+  // Get Router SSID and PASS from EEPROM, then open Config portal AP named "ESP_XXXXXX_AutoConnectAP"
+  // 1) If got stored Credentials, Config portal timeout is 10s
   // 2) If no stored Credentials, stay in Config portal until get WiFi Credentials
   if (!ESP_wifiManager.autoConnect(AP_SSID.c_str(), NULL))
   {
@@ -401,7 +393,7 @@ void setup()
   lcd.clear();
   lcd.setCursor(0,0);
   lcd.print("WIFI connected"); //14
-  delay(500);
+  delay(1000);
   lcd.clear();
   
   //read updated parameters
@@ -420,9 +412,8 @@ void setup()
   client.setServer(mqtt_server, atoi(mqtt_port));
   client.setCallback(callback);
   
-//  delay(1000);
   connectmqtt();
-  //
+
   menu = 0;
 
   lcd.backlight();
@@ -436,16 +427,15 @@ void setup()
   lcd.clear();
 }
 
-
-
+//---------- Hàm loop - chương trình chính ----------//
 void loop()
 {
   if (!client.connected())
   {
     reconnect();
   }
-  
-///////////// button SET : menu /////////////////
+
+  //----- button SET : menu -----//
   int readingSET = digitalRead(B_SET);
   if(readingSET != lastButtonStateSET)
   {
@@ -470,13 +460,13 @@ void loop()
   lastButtonStateSET = readingSET;
 
   
-///////////// menu = 0 /////////////////
+  //----- menu = 0 : Hiển thị nhiệt độ, độ ẩm, số nhắc nhở còn lại, kiểm tra BOX, kiểm tra REMINDS -----//
   if(menu == 0)
   {
     DisplayDHT();
-    printAlarmLEFT();
+    printRemindLeft();
 
-    ///////////// button BOX /////////////////
+    //----- button BOX : kiểm tra xem box đựng thuốc có được gắn hay không -----//
     int readingBOX = digitalRead(B_BOX);
     if(readingBOX != lastButtonStateBOX)
     {
@@ -513,10 +503,10 @@ void loop()
     }
   }
   
-//////////////// menu = 1: set HOUR ////////////////
+  //----- menu = 1 : set HOUR -----//
   if(menu == 1)
   {
-//////////// button B_PLUS ////////////////
+    //----- button B_PLUS -----//
     int readingPL = digitalRead(B_PLUS);
     if(readingPL != lastButtonStatePL)
     {
@@ -544,7 +534,8 @@ void loop()
       }
     }
     lastButtonStatePL = readingPL;
-//////////// button B_MINUS ////////////////
+
+    //----- button B_MINUS -----//
     int readingMN = digitalRead(B_MINUS);
     if(readingMN != lastButtonStateMN)
     {
@@ -591,11 +582,11 @@ void loop()
       lastDisplay = millis();
     }
   }
-  
-//////////////// menu = 2: set MINUTE ////////////////
+
+  //----- menu = 2: set MINUTE -----//
   if(menu == 2)
   {
-//////////// button B_PLUS ////////////////
+    //----- button B_PLUS -----//
     int readingPL = digitalRead(B_PLUS);
     if(readingPL != lastButtonStatePL)
     {
@@ -623,7 +614,8 @@ void loop()
       }
     }
     lastButtonStatePL = readingPL;
-//////////// button B_MINUS ////////////////
+
+    //----- button B_MINUS -----//
     int readingMN = digitalRead(B_MINUS);
     if(readingMN != lastButtonStateMN)
     {
@@ -671,6 +663,7 @@ void loop()
     }
   }
 
+  //----- menu = 3 : Lưu thời gian nhắc nhở, chuyển về giây và gửi lên Broker -----//
   if(menu == 3)
   {
     lcd.clear();
@@ -688,15 +681,20 @@ void loop()
     lcd.clear();
     menu = 0;
   }
+
+  //----- menu = 4 : Nhắc nhở -----//
   if(menu == 4)
   {
     remind();
   }
+
+  //----- menu = 5 : Tìm hộp thuốc -----//
   if(menu == 5)
   {
     findBox();
   }
-///////////// sau 10s tu tat hinh nen ///////////
+
+  //----- 10s sau khi nhấn nút -> tự tắt đèn nền -----//
   if((millis() - pressTime) > backlightGap)
   {
     lcd.noBacklight();
@@ -705,6 +703,7 @@ void loop()
   client.loop();
 }
 
+//---------- Hàm kết nối vào MQTT ----------//
 void connectmqtt()
 {
   client.connect("ESP32_PILL_ClientID");  // ESP will connect to mqtt broker with clientID
@@ -718,8 +717,8 @@ void connectmqtt()
     delay(500);
     lcd.clear();
     
-    client.subscribe(mqtt_sub_reminds); //topic=Demo
-    client.publish(mqtt_pub_topic, "PILL_connected to MQTT");
+    client.subscribe(mqtt_sub_reminds);
+    client.publish(mqtt_pub_topic, "PILLBOX has connected to MQTT");
 
     if (!client.connected())
     {
@@ -728,6 +727,7 @@ void connectmqtt()
   }
 }
 
+//---------- Hàm callback nhận giá trị publisher thông qua broker ----------//
 void callback(char* topic, byte* payload, unsigned int length)
 {
   Serial.print(("Message arrived in topic ["));
@@ -742,6 +742,7 @@ void callback(char* topic, byte* payload, unsigned int length)
   Serial.println(pload);
   if (String(topic) == String(mqtt_sub_reminds))
   {
+    //----- for remind() -----//
     if(pload == "Alarm")
     {
       REMINDS = 1;
@@ -750,6 +751,8 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(REMINDS);
       Serial.println();
     }
+
+    //----- for printRemindLeft() -----//
     if((char)payload[0] == 'C')
     {
       pload.remove(0,1);
@@ -762,6 +765,8 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(remind_left);
       Serial.println();
     }
+
+    //----- for findBox() -----//
     if((char)payload[0] == 'f')
     {
       REMINDS = 2;
@@ -770,6 +775,8 @@ void callback(char* topic, byte* payload, unsigned int length)
       Serial.println(REMINDS);
       Serial.println();
     }
+    
+    //----- for app -----//
     if((char)payload[0] == 'o')
     {      
       lcd.clear();
@@ -781,6 +788,7 @@ void callback(char* topic, byte* payload, unsigned int length)
   }
 }
 
+//---------- Hàm kết nối lại MQTT khi bị mất kết nối ----------//
 void reconnect()
 {
   // Loop until we're reconnected
@@ -813,6 +821,7 @@ void reconnect()
   }
 }
 
+//---------- Hàm hiển thị khi có thông báo tìm hộp thuốc ----------//
 void findBox()
 {
   if(REMINDS == 2)
@@ -833,9 +842,9 @@ void findBox()
     delay(200);
     digitalWrite(BUZZER_PIN, LOW);
     delay(200);
-    
-    ///////////// button ONOFF : mode_REMIND /////////////////
-    int readingOO = digitalRead(B_ONOFF);
+
+    //----- button OFF : mode_REMIND -----//
+    int readingOO = digitalRead(B_OFF);
     if(readingOO != lastButtonStateOO)
     {
       lastDebounceTimeOO = millis();
@@ -857,7 +866,7 @@ void findBox()
           
           client.publish(mqtt_pub_topic, "off");
           
-          Serial.print("FIND (B_ONOFF pressed)");
+          Serial.print("FIND (B_OFF pressed)");
         }
       }
     }
@@ -865,13 +874,13 @@ void findBox()
   }
 }
 
-//Bật-tắt báo thức
+//---------- Hàm nhắc nhở uống thuốc khi đến giờ ----------//
 void remind()
 {
     if((REMINDS == 1) && (BOX == true))
     {
       mode_REMIND = mode_ON;
-      Serial.println(F("Alarm..."));
+      Serial.println(F("Reminding..."));
       lcd.backlight();
       if(millis() - lastDisplay >= displayGap)
       {
@@ -894,8 +903,8 @@ void remind()
       digitalWrite(BUZZER_PIN, LOW);
     }
   
-///////////// button ONOFF : mode_REMIND /////////////////
-    int readingOO = digitalRead(B_ONOFF);
+    //----- button OFF : mode_REMIND -----//
+    int readingOO = digitalRead(B_OFF);
     if(readingOO != lastButtonStateOO)
     {
       lastDebounceTimeOO = millis();
@@ -920,7 +929,7 @@ void remind()
 
             client.publish(mqtt_pub_topic, "off");
             
-            Serial.print("reminds (B_ONOFF pressed): ");
+            Serial.print("reminds (B_OFF pressed): ");
             Serial.println(REMINDS);
           }
         }
@@ -929,10 +938,11 @@ void remind()
     lastButtonStateOO = readingOO;
 }
 
-void printAlarmLEFT()
+//---------- Hàm hiển thị số nhắc nhở còn lại ----------//
+void printRemindLeft()
 {
   lcd.setCursor(0,1);
-  lcd.print("Alarm left: "); //11char
+  lcd.print("Remind left: "); //13char
 
   lcd.print(remind_left, DEC);
   if(remind_left < 10)
@@ -940,8 +950,47 @@ void printAlarmLEFT()
     lcd.setCursor(13,1);
     lcd.print("   ");
   }
+
+  //Nếu số nhắc nhở = 0 (hết số nhắc nhở trong ngày) in ra thông báo thêm thuốc vào hộp
+  if(remind_left == 0)
+  {
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Please add");  //10char
+    lcd.setCursor(0,1);
+    lcd.print("medicines");   //9char
+
+    digitalWrite(BUZZER_PIN, HIGH);
+    delay(500);
+    digitalWrite(BUZZER_PIN, LOW);
+    delay(500);
+
+    //----- button OFF : mode_REMIND -----//
+    int readingOO = digitalRead(B_OFF);
+    if(readingOO != lastButtonStateOO)
+    {
+      lastDebounceTimeOO = millis();
+    }
+    if((millis() - lastDebounceTimeOO) > debounceDelayOO)
+    {
+      if(readingOO != buttonStateOO)
+      {
+        buttonStateOO = readingOO;
+        if(buttonStateOO == LOW)
+        {
+          lcd.backlight();
+          pressTime = millis();
+          lcd.clear();
+          digitalWrite(BUZZER_PIN, LOW);
+          menu = 0;
+        }
+      }
+    }
+    lastButtonStateOO = readingOO;
+  }
 }
 
+//---------- Hàm hiển thị nhiệt độ, độ ẩm và gửi lên Broker qua topic ----------//
 void DisplayDHT()
 {
   static int temp, hum;
