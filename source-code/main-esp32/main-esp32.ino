@@ -145,7 +145,8 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   static volatile unsigned long remind_hour = 0, remind_minute = 0; //Giữ giờ nhắc nhở mặc định hiện tại là 00:00
   static volatile unsigned long remind_sec;                         //Lưu giá trị thời gian nhắc nhở dưới dạng giây
   String sec_to_mqtt;                                               //Gửi giá trị của remind_sec lên Broker
-  static volatile uint16_t remind_left;                             //Số nhắc nhở còn lại
+  unsigned int remind_left[2] = {0,0};                              //Số nhắc nhở còn lại
+  bool remind_left_bool = false;
   static volatile byte mode_REMIND = mode_ON;
   /*
    * REMINDS:
@@ -361,8 +362,8 @@ void setup()
   
   if (Router_SSID != "")
   {
-    ESP_wifiManager.setConfigPortalTimeout(10); //If no access point name has been previously entered disable timeout.
-    Serial.println(F("Got stored Credentials. Timeout 10s"));
+    ESP_wifiManager.setConfigPortalTimeout(30); //If no access point name has been previously entered disable timeout.
+    Serial.println(F("Got stored Credentials. Timeout 30s"));
   }
   else
   {
@@ -376,7 +377,7 @@ void setup()
   AP_SSID = "ESP_" + chipID + "_AutoConnectAP";
 
   // Get Router SSID and PASS from EEPROM, then open Config portal AP named "ESP_XXXXXX_AutoConnectAP"
-  // 1) If got stored Credentials, Config portal timeout is 10s
+  // 1) If got stored Credentials, Config portal timeout is 30s
   // 2) If no stored Credentials, stay in Config portal until get WiFi Credentials
   if (!ESP_wifiManager.autoConnect(AP_SSID.c_str(), NULL))
   {
@@ -480,14 +481,12 @@ void loop()
         if(buttonStateBOX == LOW)
         {
           BOX = true;
-          Serial.print("B_BOX pressed: BOX = ");
-          Serial.print(B_BOX);
+          Serial.println("B_BOX pressed: true");
         }
         else
         {
           BOX = false;
-          Serial.print("B_BOX unpressed: BOX = ");
-          Serial.print(B_BOX);
+          Serial.println("B_BOX unpressed: false");
         }
       }
     }
@@ -746,7 +745,6 @@ void callback(char* topic, byte* payload, unsigned int length)
     if(pload == "Alarm")
     {
       REMINDS = 1;
-      
       Serial.print("payload in 'Alarm' - REMINDS: ");
       Serial.println(REMINDS);
       Serial.println();
@@ -755,14 +753,20 @@ void callback(char* topic, byte* payload, unsigned int length)
     //----- for printRemindLeft() -----//
     if((char)payload[0] == 'C')
     {
+      remind_left[0] = remind_left[1];    //Lưu giá trị remind_left[1] trước đó vào remind_left[0]
       pload.remove(0,1);
       String RLeft = pload;
-      remind_left = RLeft.toInt();
-
+      remind_left[1] = RLeft.toInt();     //Lưu giá trị remind_left[1] mới
+      if((remind_left[1] == 0) && (remind_left[1] != remind_left[0]))
+      {
+        remind_left_bool = true;
+      }
       Serial.print("payload[0] = 'C' -> RLeft = ");
       Serial.println(RLeft);
-      Serial.print("remind_left = ");
-      Serial.println(remind_left);
+      Serial.print("remind_left new = ");
+      Serial.println(remind_left[1]);
+      Serial.print("remind_left old = ");
+      Serial.println(remind_left[0]);
       Serial.println();
     }
 
@@ -770,7 +774,6 @@ void callback(char* topic, byte* payload, unsigned int length)
     if((char)payload[0] == 'f')
     {
       REMINDS = 2;
-      
       Serial.print("payload in 'find' - REMINDS: ");
       Serial.println(REMINDS);
       Serial.println();
@@ -943,18 +946,24 @@ void printRemindLeft()
 {
   lcd.setCursor(0,1);
   lcd.print("Remind left: "); //13char
-
-  lcd.print(remind_left, DEC);
-  if(remind_left < 10)
+  lcd.print(remind_left[1], DEC);
+  if(remind_left[1] < 10)
   {
-    lcd.setCursor(13,1);
-    lcd.print("   ");
+    lcd.setCursor(14,1);
+    lcd.print("  ");
+  }
+  else if(remind_left[1] < 100)
+  {
+    lcd.setCursor(15,1);
+    lcd.print(" ");
   }
 
-  //Nếu số nhắc nhở = 0 (hết số nhắc nhở trong ngày) in ra thông báo thêm thuốc vào hộp
-  if(remind_left == 0)
+  //Nếu số nhắc nhở hiện tại = 0 (hết số nhắc nhở trong ngày)
+  //và khác với số nhắc nhở trước đó thì in ra thông báo thêm thuốc vào hộp
+  if((remind_left_bool == true) && (remind_left[1] != remind_left[0]))
   {
     lcd.clear();
+    lcd.backlight();
     lcd.setCursor(0,0);
     lcd.print("Please add");  //10char
     lcd.setCursor(0,1);
@@ -980,6 +989,7 @@ void printRemindLeft()
         {
           lcd.backlight();
           pressTime = millis();
+          remind_left_bool = false;
           lcd.clear();
           digitalWrite(BUZZER_PIN, LOW);
           menu = 0;
