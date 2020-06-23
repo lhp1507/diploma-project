@@ -960,7 +960,7 @@ void printRemindLeft()
 
   //Nếu số nhắc nhở hiện tại = 0 (hết số nhắc nhở trong ngày)
   //và khác với số nhắc nhở trước đó thì in ra thông báo thêm thuốc vào hộp
-  if((remind_left_bool == true) && (remind_left[1] != remind_left[0]))
+  if(remind_left_bool == true)
   {
     lcd.clear();
     lcd.backlight();
