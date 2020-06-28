@@ -960,14 +960,14 @@ void printRemindLeft()
 
   //Nếu số nhắc nhở hiện tại = 0 (hết số nhắc nhở trong ngày)
   //và khác với số nhắc nhở trước đó thì in ra thông báo thêm thuốc vào hộp
-  if(remind_left_bool == true)
+  if((remind_left_bool == true) && (BOX == true) && (REMINDS == 0))
   {
     lcd.clear();
     lcd.backlight();
     lcd.setCursor(0,0);
     lcd.print("Please add");  //10char
     lcd.setCursor(0,1);
-    lcd.print("medicines");   //9char
+    lcd.print("more medicines");   //14char
 
     digitalWrite(BUZZER_PIN, HIGH);
     delay(500);
@@ -987,11 +987,11 @@ void printRemindLeft()
         buttonStateOO = readingOO;
         if(buttonStateOO == LOW)
         {
+          lcd.clear();
+          digitalWrite(BUZZER_PIN, LOW);
           lcd.backlight();
           pressTime = millis();
           remind_left_bool = false;
-          lcd.clear();
-          digitalWrite(BUZZER_PIN, LOW);
           menu = 0;
         }
       }
