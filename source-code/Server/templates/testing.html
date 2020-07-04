@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>SMART BOX</title>
+	<!-- <meta http-equiv= "X-UA-Compatible" content= "IE=edge"> -->
+	<meta name= "viewport" content="width= device-width, initial-scale= 1">
+	<!-- Phan nay chu y go dung ten bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<!-- 	<div class="container"> -->
+		      <nav class="navbar navbar-expand-sm bg-light navbar-light">
+		         <!-- Brand -->
+		         <a class="navbar-brand" href="#">
+			  	 	<img src="img/Logo_dhbkdn.jpg" style="width:64px;">
+			   	 </a>
+		         <a class="navbar-brand" href="#">SMART BOX</a>
+		 
+		         <!-- Toggler/collapsibe Button -->
+		         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+		            <span class="navbar-toggler-icon"></span>
+		         </button>
+		 
+		         <!-- Navbar links -->
+		         <div class="collapse navbar-collapse" id="collapsibleNavbar">
+		            <ul class="navbar-nav">
+		               <li class="nav-item">
+		                  <a class="nav-link" href="#" data-toggle="tab" href="#home">Home</a>
+		               </li>
+		               <li class="nav-item">
+		                  <a class="nav-link" href="#" data-toggle="tab" href="#sensor">Sensor</a>
+		               </li>
+		               <li class="nav-item">
+		                  <a class="nav-link" href="#" data-toggle="tab" href="#about">About us</a>
+		               </li>
+		            </ul>
+		         </div>
+		      </nav>
+	<!-- </div> -->
+	      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+         <!-- Brand -->
+         <a class="navbar-brand" href="#">o7planning</a>
+ 
+         <!-- Toggler/collapsibe Button -->
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+ 
+         <!-- Navbar links -->
+         <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+               <li class="nav-item">
+                  <a class="nav-link" href="#">Javascript</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="#">Css</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link" href="#">Bootstrap</a>
+               </li>
+            </ul>
+         </div>
+      </nav>
+      <script>
+jQuery.get("GetHumidity.php", function(data){
+  alert("Data: " + data);
+});      </script>
+</body>
+</html>

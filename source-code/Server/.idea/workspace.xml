@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="159e2590-84c8-4a11-9a9b-118eb9195742" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="Server" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1XmRRlLsfUM5cbnWdVlzEp6Ckom" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings>
+        <option name="useSoftWraps" value="true" />
+      </console-settings>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\Server" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.FileHandle (1)">
+    <configuration name="ConnectTopic" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="fpt" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ConnectTopic.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FileHandle (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="fpt" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FileHandle.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="FileHandle" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="fpt" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="C:\xampp\htdocs\Server\FileHandle.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Timer" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="fpt" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Timer.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="timeData" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="fpt" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/timeData.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.FileHandle (1)" />
+        <item itemvalue="Python.ConnectTopic" />
+        <item itemvalue="Python.FileHandle" />
+        <item itemvalue="Python.Timer" />
+        <item itemvalue="Python.timeData" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="159e2590-84c8-4a11-9a9b-118eb9195742" name="Default Changelist" comment="" />
+      <created>1561345137728</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1561345137728</updated>
+      <workItem from="1561515740330" duration="718000" />
+      <workItem from="1561537205806" duration="697000" />
+      <workItem from="1561599638236" duration="748000" />
+      <workItem from="1561600510612" duration="1604000" />
+      <workItem from="1582166638420" duration="1019000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state width="1345" height="29" key="GridCell.Tab.0.bottom" timestamp="1592550545666">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="29" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1592550545666" />
+    <state width="1345" height="29" key="GridCell.Tab.0.center" timestamp="1592550545666">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="29" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1592550545666" />
+    <state width="1345" height="29" key="GridCell.Tab.0.left" timestamp="1592550545666">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="29" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1592550545666" />
+    <state width="1345" height="29" key="GridCell.Tab.0.right" timestamp="1592550545666">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="29" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1592550545666" />
+    <state width="1345" height="246" key="GridCell.Tab.1.bottom" timestamp="1586232940892">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="246" key="GridCell.Tab.1.bottom/0.0.1366.738@0.0.1366.738" timestamp="1586232940892" />
+    <state width="1345" height="246" key="GridCell.Tab.1.center" timestamp="1586232940892">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="246" key="GridCell.Tab.1.center/0.0.1366.738@0.0.1366.738" timestamp="1586232940892" />
+    <state width="1345" height="246" key="GridCell.Tab.1.left" timestamp="1586232940892">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="246" key="GridCell.Tab.1.left/0.0.1366.738@0.0.1366.738" timestamp="1586232940892" />
+    <state width="1345" height="246" key="GridCell.Tab.1.right" timestamp="1586232940892">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1345" height="246" key="GridCell.Tab.1.right/0.0.1366.738@0.0.1366.738" timestamp="1586232940892" />
+    <state x="168" y="0" key="SettingsEditor" timestamp="1587178740745">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="168" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1587178740745" />
+    <state x="404" y="110" width="540" height="524" key="StructurePopup" timestamp="1586851672119">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="404" y="110" width="540" height="524" key="StructurePopup/0.0.1366.738@0.0.1366.738" timestamp="1586851672119" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1587093990547">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.1366.738@0.0.1366.738" timestamp="1587093990547" />
+    <state x="391" y="196" width="812" height="346" key="com.intellij.ide.util.TipDialog" timestamp="1592537512182">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="391" y="196" width="812" height="346" key="com.intellij.ide.util.TipDialog/0.0.1366.738@0.0.1366.738" timestamp="1592537512182" />
+    <state x="391" y="204" key="com.intellij.ide.util.TipDialog/0.0.1366.768@0.0.1366.768" timestamp="1588403555116" />
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup" timestamp="1589603206758">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="346" y="59" width="672" height="678" key="search.everywhere.popup/0.0.1366.738@0.0.1366.738" timestamp="1589603206758" />
+  </component>
+</project>

@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Take Medicines</string>
+
+    <string name="notice_title">Time to take your medicine!</string>
+    <string name="notice_content_1">Medication works best when taken on time.</string>
+    <string name="notice_content_2">Always take your medication regularly every day to ensure the best health for you!</string>
+    <string name="notice_content_3">Touch the AGREE button below and take your medication every day.</string>
+    <string name="notice_agree">AGREE</string>
+    <string name="setting_title">Setting</string>
+    <string name="setting_ip_sever">IP Server</string>
+    <string name="setting_ip_broker">IP Broker</string>
+    <string name="setting_cancel">Cancel</string>
+    <string name="setting_upfate">Update</string>
+
+    <string name="menu_find">Find</string>
+    <string name="menu_add">Add</string>
+    <string name="menu_setting">Setting</string>
+
+    <string name="toast_error_con_mqtt">" Error connecting to broker."</string>
+    <string name="toast_error_sub_mqtt">" Error subscribe to broker."</string>
+    <string name="toast_error_timeout">Error timed out.</string>
+    <string name="toast_add_success">Add success.</string>
+    <string name="toast_record_existed">Your record has existed.</string>
+    <string name="toast_error_add">Error add time.</string>
+    <string name="toast_error_system_internet">Error system or Internet.</string>
+    <string name="toast_update_success">Update Success.</string>
+    <string name="toast_error_update">Error update time.</string>
+    <string name="toast_delete_success">Delete success.</string>
+    <string name="toast_error_delete">Error delete Time.</string>
+</resources>

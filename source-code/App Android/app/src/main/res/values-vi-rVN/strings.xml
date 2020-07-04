@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Uống Thuốc</string>
+    <string name="notice_title">Đến giờ uống thuốc!</string>
+    <string name="notice_content_1">Thuốc chỉ phát huy hiệu quả nhất khi uống đúng giờ.</string>
+    <string name="notice_content_2">Hãy luôn uống thuốc đều đặn mỗi ngày để đảm bảo sức khỏe tốt nhất cho bạn!</string>
+    <string name="notice_content_3">Chạm vào nút ĐỒNG Ý ở bên dưới và thực hiện uống thuốc đều đặn mỗi ngày.</string>
+    <string name="notice_agree">Đồng ý</string>
+    <string name="setting_title">Cài đặt</string>
+    <string name="setting_ip_sever">Địa chỉ máy chủ</string>
+    <string name="setting_ip_broker">Địa chỉ Broker</string>
+    <string name="setting_cancel">Hủy</string>
+    <string name="setting_upfate">Cập nhật</string>
+    <string name="menu_find">Tìm kiếm</string>
+    <string name="menu_add">Thêm</string>
+    <string name="menu_setting">Cài đặt</string>
+    <string name="toast_error_con_mqtt">Lỗi kết nối với broker.</string>
+    <string name="toast_error_sub_mqtt">Lỗi đăng ký với broker.</string>
+    <string name="toast_error_timeout">Lỗi quá thời gian lấy.</string>
+    <string name="toast_add_success">Thêm thành công.</string>
+    <string name="toast_record_existed">Thời gian đã tồn tại.</string>
+    <string name="toast_error_add">Lỗi thêm thời gian.</string>
+    <string name="toast_error_system_internet">Lỗi hệ thống hoặc đường truyền.</string>
+    <string name="toast_update_success">Cập nhật thành công.</string>
+    <string name="toast_error_update">Lỗi cập nhật thời gian.</string>
+    <string name="toast_delete_success">Xóa thành công.</string>
+    <string name="toast_error_delete">Lỗi xóa thời gian.</string>
+</resources>

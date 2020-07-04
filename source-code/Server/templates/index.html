@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<link rel="shortcut icon" href="img/favicon.ico">
+	<title>SMART BOX</title>
+	<!-- <meta http-equiv= "X-UA-Compatible" content= "IE=edge"> -->
+	<meta name= "viewport" content="width= device-width, initial-scale= 1">
+	<!-- Phan nay chu y go dung ten bootstrap -->
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" >
+	<!-- <script type="text/javascript" href="bootstrap/js/bootstrap.js"></script> -->
+	<!-- <script type="text/javascript" href="bootstrap/js/jquery.js"></script> -->
+	<link rel="stylesheet" href="bootstrap/css/glyphicon.css">
+	<script src='https://kit.fontawesome.com/a076d05399.js'></script> <!-- ICON -->
+
+	<script src="bootstrap/js/jquery.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<!-- This is circular progress bar -->
+	<link href="justgage-1.2.2/style.css" rel="stylesheet" >
+	<script src="justgage-1.2.2/raphael-2.1.4.min.js"></script>
+    <script src="justgage-1.2.2/justgage.js"></script>
+
+
+	<script>
+		// sử dụng AJAX để cập nhập lại bảng có tên là times
+	function loadDoc() {
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      document.getElementById("times").innerHTML = this.responseText;
+	    }
+	  };
+	  xhttp.open("GET", "configure.php", true);
+	  xhttp.send();
+	}
+	setInterval(loadDoc, 1000); //Call ajax every 1 seconds
+	</script>
+
+</head>
+
+<body>
+
+
+	<nav class="navbar navbar-expand-sm navbar-light bg-light navbar-static-top">
+		<div class="navbar-header">
+	         <!-- Brand -->
+	         <a class="navbar-brand" href="#">
+		  	 	<img src="img/ETE.jpg" style="width: 48px;">
+		   	 </a>
+	         <a class="navbar-brand" href="#">SMART BOX</a>
+     	</div>
+
+         <!-- Toggler/collapsibe Button -->
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+         </button>
+ 
+         <!-- Navbar links -->
+         <div class="collapse navbar-collapse" id="collapsibleNavbar">
+  			<ul class="nav navbar-nav ml-auto">
+				<li>
+					<a class="nav-link" id="home-tab" data-toggle="tab" href="#home">Home</a>
+				</li>
+				<li >
+					<a class="nav-link" id="sensor-tab" data-toggle="tab" href="#sensor">Sensor</a>
+				</li>
+				<li >
+					<a class="nav-link" id="about-tab" data-toggle="tab" href="#about">About us</a>
+				</li>
+			</ul>
+		</div>
+	</nav> 
+
+<div class="container-fluids">
+
+	<div class="jumbotron">
+		<h2>CONTROL PANEL</h2>
+		<P>set up alarm and viewing humidities and temperatures </P>
+	</div>
+
+	<div class="tab-content"> 
+		<div class="tab-pane fade show active" id="home"> <!--tab 1-->
+			<div class="row">
+				<div id="alarm" class="col-md-3">
+					<h3 class="page-header"><span class="glyphicon glyphicon-bell" aria-hidden="true"></span>Select your time</h3>
+					<form action="insert.php" method="POST" > <!--action="insert.php"-->
+						<!-- Chi so gio -->
+						<div class="form-group">
+							<label class="text-center" ><b>Chọn giờ</b></label>
+							<select name="hour" class="form-control"> 
+								<!-- Hiển thị hướng dẫn mờ cho người dùng nhìn thấy -->
+								<option selected hidden >Select hour</option> 
+								<option value="00">00</option>
+								<option value="01">01</option>
+								<option value="02">02</option>	
+								<option value="03">03</option>	
+								<option value="04">04</option>	
+								<option value="05">05</option>	
+								<option value="06">06</option>	
+								<option value="07">07</option>	
+								<option value="08">08</option>	
+								<option value="09">09</option>	
+								<option value="10">10</option>	
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>						
+							</select>
+						</div><!-- <br>end form group -->
+
+						<!-- Chi so phut -->
+						<div class="form-group">
+							<label ><b>Chọn phút</b></label>
+							<select name="minute"  class="form-control">
+							<option selected hidden>Select Minute</option>
+							<option value="00">00</option>
+							<option value="01">01</option>
+							<option value="02">02</option>
+							<option value="03">03</option>
+							<option value="04">04</option>
+							<option value="05">05</option>
+							<option value="06">06</option>
+							<option value="07">07</option>
+							<option value="08">08</option>
+							<option value="09">09</option>
+							<option value="10">10</option>
+							<option value="11">11</option>
+							<option value="12">12</option>
+							<option value="13">13</option>
+							<option value="14">14</option>
+							<option value="15">15</option>
+							<option value="16">16</option>
+							<option value="17">17</option>
+							<option value="18">18</option>
+							<option value="19">19</option>
+							<option value="20">20</option>
+							<option value="21">21</option>
+							<option value="22">22</option>
+							<option value="23">23</option>
+							<option value="24">24</option>
+							<option value="25">25</option>
+							<option value="26">26</option>
+							<option value="27">27</option>
+							<option value="28">28</option>
+							<option value="29">29</option>
+							<option value="30">30</option>
+							<option value="31">31</option>
+							<option value="32">32</option>
+							<option value="33">33</option>
+							<option value="34">34</option>
+							<option value="35">35</option>
+							<option value="36">36</option>
+							<option value="37">37</option>
+							<option value="38">38</option>
+							<option value="39">39</option>
+							<option value="40">40</option>
+							<option value="41">41</option>
+							<option value="42">42</option>
+							<option value="43">43</option>
+							<option value="44">44</option>
+							<option value="45">45</option>
+							<option value="46">46</option>
+							<option value="47">47</option>
+							<option value="48">48</option>
+							<option value="49">49</option>
+							<option value="50">50</option>
+							<option value="51">51</option>
+							<option value="52">52</option>
+							<option value="53">53</option>
+							<option value="54">54</option>
+							<option value="55">55</option>
+							<option value="56">56</option>
+							<option value="57">57</option>
+							<option value="58">58</option>
+							<option value="59">59</option>
+							</select>
+						</div> <!-- end form group -->
+						<!-- <label>check box</label><input type="checkbox" name="checkbox" value="1"> -->
+						<!-- <div class="form-group"><button class="btn btn-success btn-sm btn-block" type="submit" name="sub">Save</button>
+						</div> -->
+						<div class="form-group" ><input type="submit" class="btn btn-success btn-sm btn-block" name="sub"> 	
+						</div>	
+					</form><br>
+				</div>	
+				<div id="list" class="col-md-9">
+					<h3><span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>   List of time</h3>
+						<table id="times" class="table table-striped table-bordered">
+						 	<?php require ("configure.php"); ?>
+						 	
+						 </table>
+				</div>
+			</div> <!-- end row tab 1 in navigation bar -->
+		</div><!--End tab 1-->
+		
+		<div class="tab-pane fade" id="sensor"> <!--tab 2-->
+				   <div class="row">
+				        <div class="col-md-3 col-sm-6">
+				        	<h2 class="pl-5"><i class='fas fa-tint' style='font-size:36px'></i>HUMIDITY</h2>
+						    <div class="text-center">
+						    	<div id="humidity" class="gauge"></div>
+						    	<script>
+						    		var humidity = new JustGage({
+												              id: 'humidity',
+												              value: 0,
+												              min: 0,
+												              max: 100,
+												              symbol: '%',
+												              donut: true,
+												              pointer: true,
+												              gaugeWidthScale: 0.4,
+												              pointerOptions: {
+												                toplength: 10,
+												                bottomlength: 10,
+												                bottomwidth: 8,
+												                color: '#000'
+												              },
+												              customSectors: [{
+												                color: "#ff0000",
+												                lo: 0,
+												                hi: 34
+												              }, {
+												                color: "#00ff00",
+												                lo: 35,
+												                hi: 45
+												              }, {
+												                color: "#ff0000",
+												                lo: 46,
+												                hi: 100
+												              }],
+												              counter: true
+												         });
+						    	function loadHumidity(){
+						    		ajax = new XMLHttpRequest();
+								    ajax.open("GET", "GetTHumidity.php", true);
+								    ajax.send();
+								    ajax.onreadystatechange = function(){
+														          if (this.readyState == 4 && this.status == 200) {
+														              var data = JSON.parse(this.responseText);
+														              console.log(data[0].humidity);
+														              
+																	  humidity.refresh(data[0].humidity);
+														          };
+														       }
+											}
+								setInterval(loadHumidity, 3000);
+								    
+								</script>
+					    		</div>
+						    </div>
+					
+				        <div class="col-md-3 col-sm-6">
+				        	<h2><i class='fas fa-thermometer-three-quarters' style='font-size:36px'></i> TEMPERATURE</h2>
+						            <div id="temperature" class="gauge"></div>
+						<script>
+				    		var temperature = new JustGage({
+										              id: 'temperature',
+										              value: 0,
+										              min: 0,
+										              max: 100,
+										              symbol: '°C',
+										              donut: true,
+										              pointer: true,
+										              gaugeWidthScale: 0.4,
+										              pointerOptions: {
+										                toplength: 10,
+										                bottomlength: 10,
+										                bottomwidth: 8,
+										                color: '#000'
+										              },
+										              customSectors: [{
+										                color: "#ff0000",
+										                lo: 0,
+										                hi: 19
+										              }, {
+										                color: "#00ff00",
+										                lo: 20,
+										                hi: 25
+										              }, {
+										                color: "#ff0000",
+										                lo: 26,
+										                hi: 100
+										              }],
+										              counter: true
+										         });
+				    	function loadTemperature(){
+				    		ajax = new XMLHttpRequest();
+						    ajax.open("GET", "GetTemperature.php", true);
+						    ajax.send();
+						    ajax.onreadystatechange = function(){
+												          if (this.readyState == 4 && this.status == 200) {
+												              var data = JSON.parse(this.responseText);
+												              console.log(data[0].temperature);
+												              
+															  temperature.refresh(data[0].temperature);
+												          };
+												       }
+									}
+						setInterval(loadTemperature, 3000);
+						</script>
+				        </div><!--End temperature row-->
+					</div>
+		</div><!--End tab 2-->
+
+		<div class="tab-pane fade" id="about"> <!-- tab 3-->
+				<div class="row">
+					<div class="col-sm-4 text-center">
+						<img src="img/TranTheDau(dautt).jpg"  width="50%" >
+						<h3>TRẦN THẾ ĐẨU 15DT3</h3>
+						<p>Xây dựng server và giao diện website.</p>
+					</div>	<!--end box 1 -->
+					<div class="col-sm-4 text-center">
+						<img src="img/NguyenNgocQuang(QuangNN13).jpg" width="50%">
+						<h3>NGUYỄN NGỌC QUANG 15DT2</h3>
+						<p>Xây dựng ứng dụng di động.</p>
+					</div>	<!--end box 2 -->
+					<div class="col-sm-4 text-center">
+						<img src="img/LeHuuPhu(Phulh).jpg" width="50%">
+						<h3>LÊ HỮU PHÚ 15DT3</h3>
+						<p>Mô hình hộp thuốc.</p>
+					</div>	<!--end box 3 -->
+
+				</div><!--end row-->
+		</div><!--end tab 3-->
+
+	</div><!-- end content tab-->
+</div><!-- end container -->
+
+<footer class="jumbotron fixed-botton">
+    <div>© Trần Thế Đẩu : 0972292056</div>
+</footer>
+
+</body>
+</html>
