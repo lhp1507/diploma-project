@@ -157,6 +157,7 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   static volatile uint8_t REMINDS = 0;
   
 //----- Các biến khác -----//
+  unsigned long lastRing = 0;
   unsigned long lastSend = 0;
   unsigned long lastRead = 0;
   unsigned long lastDisplay = 0;
@@ -969,34 +970,19 @@ void printRemindLeft()
     lcd.setCursor(0,1);
     lcd.print("more medicines");   //14char
 
-    digitalWrite(BUZZER_PIN, HIGH);
-    delay(500);
-    digitalWrite(BUZZER_PIN, LOW);
-    delay(500);
+    for(int i = 1; i <= 5; i++)
+    {
+      digitalWrite(BUZZER_PIN, HIGH);
+      delay(500);
+      digitalWrite(BUZZER_PIN, LOW);
+      delay(500);
+      delay(1000);
+    }
 
-    //----- button OFF : mode_REMIND -----//
-    int readingOO = digitalRead(B_OFF);
-    if(readingOO != lastButtonStateOO)
-    {
-      lastDebounceTimeOO = millis();
-    }
-    if((millis() - lastDebounceTimeOO) > debounceDelayOO)
-    {
-      if(readingOO != buttonStateOO)
-      {
-        buttonStateOO = readingOO;
-        if(buttonStateOO == LOW)
-        {
-          lcd.clear();
-          digitalWrite(BUZZER_PIN, LOW);
-          lcd.backlight();
-          pressTime = millis();
-          remind_left_bool = false;
-          menu = 0;
-        }
-      }
-    }
-    lastButtonStateOO = readingOO;
+    lcd.clear();
+    digitalWrite(BUZZER_PIN, LOW);
+    remind_left_bool = false;
+    menu = 0;
   }
 }
 
