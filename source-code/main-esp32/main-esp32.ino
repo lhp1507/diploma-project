@@ -144,6 +144,7 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
 //----- các biến sử dụng cho thời gian nhắc nhở -----//
   static volatile unsigned long remind_hour = 0, remind_minute = 0; //Giữ giờ nhắc nhở mặc định hiện tại là 00:00
   static volatile unsigned long remind_sec;                         //Lưu giá trị thời gian nhắc nhở dưới dạng giây
+  static volatile unsigned long last_remind_sec = 0;                //Lưu giá trị thời gian nhắc nhở dưới dạng giây trước đó
   String sec_to_mqtt;                                               //Gửi giá trị của remind_sec lên Broker
   unsigned int remind_left[2] = {0,0};                              //Số nhắc nhở còn lại
   bool remind_left_bool = false;
@@ -157,12 +158,8 @@ LiquidCrystal_I2C lcd(0x27,16,2); //khai báo địa chỉ và kích thước lc
   static volatile uint8_t REMINDS = 0;
   
 //----- Các biến khác -----//
-  unsigned long lastRing = 0;
-  unsigned long lastSend = 0;
-  unsigned long lastRead = 0;
+  int lastTemp = 0, lastHum = 0;
   unsigned long lastDisplay = 0;
-  unsigned long readInterval = 10000; //1 chu kỳ đọc là 10s
-  unsigned long sendInterval = 10000; //1 chu kỳ gửi là 10s
   unsigned long displayGap = 150;     //Chu kỳ hiển thị của LCD
   unsigned long pressTime = 0;        //Thời gian kể từ khi nhấn nút
   unsigned long backlightGap = 10000; //sau 10s không nhấn nút thì tắt đèn nền
@@ -669,14 +666,19 @@ void loop()
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Saved remind");
-
+    
     //Chuyển thời gian hẹn giờ đã nhập về giây:
     remind_sec = (remind_hour*60 + remind_minute)*60;
-    sec_to_mqtt = "G" + String(remind_sec);
     
-    sec_to_mqtt.toCharArray(bufferG, (sec_to_mqtt.length() + 1));
-    client.publish(mqtt_pub_topic, bufferG);
+    if(remind_sec != last_remind_sec)
+    {
+      sec_to_mqtt = "G" + String(remind_sec);
+      sec_to_mqtt.toCharArray(bufferG, (sec_to_mqtt.length() + 1));
+      client.publish(mqtt_pub_topic, bufferG);
 
+      last_remind_sec = remind_sec;
+    }
+    
     delay(1000);
     lcd.clear();
     menu = 0;
@@ -973,12 +975,11 @@ void printRemindLeft()
     for(int i = 1; i <= 5; i++)
     {
       digitalWrite(BUZZER_PIN, HIGH);
-      delay(500);
+      delay(250);
       digitalWrite(BUZZER_PIN, LOW);
-      delay(500);
       delay(1000);
     }
-
+    
     lcd.clear();
     digitalWrite(BUZZER_PIN, LOW);
     remind_left_bool = false;
@@ -989,7 +990,6 @@ void printRemindLeft()
 //---------- Hàm hiển thị nhiệt độ, độ ẩm và gửi lên Broker qua topic ----------//
 void DisplayDHT()
 {
-  static int lastTemp = 0, lastHum = 0;
   static int temp = 0, hum = 0;
   
   temp = dht.readTemperature(); //đọc nhiệt độ (Ngưỡng t: 0 - 55 độ C, sai số +-2 độ C) 
