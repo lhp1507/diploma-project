@@ -1003,44 +1003,40 @@ void printRemindLeft()
 //---------- Hàm hiển thị nhiệt độ, độ ẩm và gửi lên Broker qua topic ----------//
 void DisplayDHT()
 {
-  static int temp, hum;
-  if(millis() - lastRead >= readInterval)
+  static int lastTemp = 0, lastHum = 0;
+  static int temp = 0, hum = 0;
+  
+  temp = dht.readTemperature(); //đọc nhiệt độ (Ngưỡng t: 0 - 55 độ C, sai số +-2 độ C) 
+  hum = dht.readHumidity(); //đọc độ ẩm (Ngưỡng h: 20% - 90%, sai số +-5%)
+  // Check if any reads failed and exit early (to try again).
+  if (isnan(hum) || isnan(temp))
   {
-    
-    temp = dht.readTemperature(); //đọc nhiệt độ (Ngưỡng t: 0 - 55 độ C, sai số +-2 độ C) 
-    hum = dht.readHumidity(); //đọc độ ẩm (Ngưỡng h: 20% - 90%, sai số +-5%)
-    // Check if any reads failed and exit early (to try again).
-    if (isnan(hum) || isnan(temp))
-    {
-      Serial.println(F("Failed to read from DHT sensor!"));
-      return;
-    }
-
-    lastRead = millis();
+    Serial.println(F("Failed to read from DHT sensor!"));
+    return;
   }
-
-  if(millis() - lastSend >= sendInterval)
+  if((temp != lastTemp) || (hum != lastHum))
   {
-    String T = "T" + String(temp);
-    String H = "H" + String(hum);
+      String T = "T" + String(temp);
+      String H = "H" + String(hum);
 
-    Serial.println("\nvalue:");
-    Serial.println(sec_to_mqtt);
-    Serial.println(T);
-    Serial.println(H);
+      Serial.println("\nvalue:");
+      Serial.println(sec_to_mqtt);
+      Serial.println(T);
+      Serial.println(H);
 
-    T.toCharArray(bufferT, (T.length()+1));
-    H.toCharArray(bufferH, (H.length()+1));
+      T.toCharArray(bufferT, (T.length()+1));
+      H.toCharArray(bufferH, (H.length()+1));
 
-    Serial.println("\nbuff:");
-    Serial.println(bufferG);
-    Serial.println(bufferT);
-    Serial.println(bufferH);
+      Serial.println("\nbuff:");
+      Serial.println(bufferG);
+      Serial.println(bufferT);
+      Serial.println(bufferH);
     
-    client.publish(mqtt_pub_topic, bufferT);
-    client.publish(mqtt_pub_topic, bufferH);
-      
-    lastSend = millis();
+      client.publish(mqtt_pub_topic, bufferT);
+      client.publish(mqtt_pub_topic, bufferH);
+
+      lastHum = hum;
+      lastTemp = temp;
   }
 
   if(millis() - lastDisplay >= displayGap)
